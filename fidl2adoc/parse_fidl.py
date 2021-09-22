@@ -11,7 +11,7 @@ def fix_descr_intent(description):
                 leading_spaces += 1
             else:
                 break
-        if leading_spaces > 0:
+        if leading_spaces > 0 and not line.isspace():
             if min_leading_spaces == INVALID_INTENT:
                 min_leading_spaces = leading_spaces
             min_leading_spaces = min(min_leading_spaces, leading_spaces)
