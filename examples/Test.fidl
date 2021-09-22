@@ -12,10 +12,10 @@ interface Test
 
     <**
     @description : Attribute testAttribute has some description.
-	
+    
         New paragraph in the attribute description. testAttribute is updated by sending
         method TestMethod.
-		
+        
         [plantuml, test-seq-1]
         ----
         Client -> Server: testMethod(params)
@@ -86,6 +86,9 @@ interface Test
         NONE = 99
     }
     
-    array Urls of String
+    <**
+    @description : Description of TestArrayType
+    **> 
+    array TestArrayType of String
 
 }
