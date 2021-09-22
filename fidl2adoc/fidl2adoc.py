@@ -66,17 +66,6 @@ for fidl_file in inputfiles:
     except (LexerException, ParserException, ProcessorException) as e:
         print("ERROR in " + fidl_file.strip() + ": {}".format(e)) 
 
-
-# Test fidl file with methods (parameters in tables), attributes, enumerator description, see/description, used in
-
-# Not yet supported:
-# TypeCollections
-# Inline Array Definition
-# Broadcasts
-# HTML linking for Enumerations used in Arrays
-# interface version
-# Out parameters from methods
-
 types_list = {}
 
 # print (processor.packages.values())
