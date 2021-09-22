@@ -1,0 +1,91 @@
+<**
+   @description : Description of the testpackage.
+**>
+package testpackage
+
+<**
+   @description : Description of the Test interface
+   @author : Author
+**>
+interface Test
+{
+
+    <**
+    @description : Attribute testAttribute has some description.
+	
+        New paragraph in the attribute description. testAttribute is updated by sending
+        method TestMethod.
+		
+        [plantuml, test-seq-1]
+        ----
+        Client -> Server: testMethod(params)
+        Server -> Client: set testAttribute
+        ----
+
+    @see: testMethod
+    **>
+    attribute TestType1 testAttribute
+    
+    <**
+    @description :
+        Description of TestMethod.
+        
+        
+    @see: testAttribute
+    **>
+    method TestMethod {
+        in {
+            <**
+            @description : Description of the input parameter testParameter.
+            **>
+            TestType2 testParameter
+        }
+    }
+
+    <**
+    @description : Description of TestType2
+    **>
+    struct TestType2 {
+        <**
+        @description : Description of structParam1
+        **>
+        String structParam1
+        <**
+        @description : Description of structParam2
+        **>
+        UInt32 structParam2
+        <**
+        @description : Description of structParam3
+        **>
+        TestType1 structParam3
+    }
+
+    <**
+    @description : Description of TestType1
+    **> 
+    enumeration TestType1 {
+        <**
+        @description : Description of INIT
+        **> 
+        INIT
+        <**
+        @description : Description of STARTING
+        **>
+        STARTING
+        <**
+        @description : Description of RUNNING
+        **>
+        RUNNING = 3
+        <**
+        @description : Description of SHUTDOWN
+        **>
+        SHUTDOWN
+        <**
+        @description : Description of NONE
+        **>
+        NONE = 99
+    }
+    
+    array Urls of String
+
+}
