@@ -22,7 +22,7 @@ interface Test
         Server -> Client: set testAttribute
         ----
 
-    @see: testMethod
+    @see: TestMethod
     **>
     attribute TestType1 testAttribute
     
