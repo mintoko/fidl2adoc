@@ -7,8 +7,7 @@ fidl2adoc is a Python script, which generates documentation from Franca IDL (.fi
 == Usage
 
 === Dependencies
-Latest version 0.4.1 of https://github.com/zayfod/pyfranca[PyFranca]
-To install the library, call:
+Latest version 0.4.1 of https://github.com/zayfod/pyfranca[PyFranca]. To install the library, call:
   
   pip install pyfranca
 
