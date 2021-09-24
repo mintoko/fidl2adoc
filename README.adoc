@@ -2,13 +2,12 @@
 
 == Introduction
 
-fidl2adoc is a Python script, which converts Franca IDL (.fidl) files into AsciiDoc (.adoc) files. It is using the Python library https://github.com/zayfod/pyfranca[PyFranca] to build an abstract syntax tree from the Franca IDL files and generates the complete documentation from the Franca IDL files into an output AsciiDoc file and adds links between Attributes, Methods, Datatypes etc., see example link:examples/Test.fidl[Test.fidl] with corresponding link:examples/Test.adoc[Test.adoc]. link:examples/Test.adoc[Test.adoc] can be viewed in Chrome with Asciidoctor.js extension.
+fidl2adoc is a Python script, which generates documentation from Franca IDL (.fidl) files in AsciiDoc (.adoc). It uses Python library https://github.com/zayfod/pyfranca[PyFranca] to parse Franca IDL files, generates the documentation into an output AsciiDoc file and adds links between Attributes, Methods, Datatypes etc., see example link:examples/Test.fidl[Test.fidl] with corresponding link:examples/Test.adoc[Test.adoc].
 
 == Usage
 
 === Dependencies
-Latest version 0.4.1 of https://github.com/zayfod/pyfranca[PyFranca]
-To install the library, call:
+Latest version 0.4.1 of https://github.com/zayfod/pyfranca[PyFranca]. To install the library, call:
   
   pip install pyfranca
 
