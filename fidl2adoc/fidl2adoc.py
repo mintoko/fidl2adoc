@@ -1,4 +1,11 @@
 from pyfranca import Processor, LexerException, ParserException, ProcessorException, ast
+import sys, getopt
+
+processor = Processor()
+inputfiles = []
+outputfile = ''
+adoc = []
+types_list = {}
 
 def fix_descr_intent(description):
     description_lines = description.split('\n')
@@ -30,11 +37,36 @@ def fix_descr_intent(description):
 	
     return '\n'.join(fixed_intent_lines)
 
-processor = Processor()
-
-import sys, getopt
-inputfiles = []
-outputfile = ''
+def process_method_args(args, title, fidl_interface):
+    global adoc
+    if (args) :
+        # print (args)
+        adoc.append(title)
+        adoc.append('[options="header",cols="20%,20%,60%"]')
+        adoc.append('|===')
+        adoc.append('|Type | Name | Description ')
+        for parameter in args :
+            arg = args[parameter]
+            comment = ""
+            if arg and arg.comments :
+                comment = arg.comments['@description']
+            if arg and arg.name and arg.type:
+                type_name = arg.type.name
+                if not type_name:
+                    type_name = str(arg.type)
+                if isinstance(arg.type, ast.PrimitiveType) :
+                    adoc.append('|' + arg.type.name + ' | ' + arg.name + ' | ' + comment)
+                else :
+                    adoc.append('| <<' + fidl_interface.name + '-' + type_name + '>> | ' + arg.name + ' | ' + comment)
+                if arg.type.name in types_list:
+                    types_list[arg.type.name] = types_list[arg.type.name] + [fidl_interface.methods[method].name]
+                else :
+                    types_list[arg.type.name] = [fidl_interface.methods[method].name]
+            else:
+                print('Parse error in ' + str(args) + ', see: ' + comment)
+        adoc.append('|===\n')
+    # else :
+        # adoc.append('No parameters\n')
 
 def main(argv):
    global inputfiles
@@ -42,11 +74,11 @@ def main(argv):
    try:
       opts, args = getopt.getopt(argv,"hi:o:",["ifile=","ofile="])
    except getopt.GetoptError:
-      print ('test.py -i <inputfile> -o <outputfile>')
+      print ('fidl2adoc.py -i <inputfile> [-i <inputfile2>]* -o <outputfile>')
       sys.exit(2)
    for opt, arg in opts:
       if opt == '-h':
-         print ('test.py -i <inputfile> -o <outputfile>')
+         print ('fidl2adoc.py -i <inputfile> [-i <inputfile2>]* -o <outputfile>')
          sys.exit()
       elif opt in ("-i", "--ifile"):
          inputfiles.append(arg)
@@ -58,15 +90,11 @@ def main(argv):
 if __name__ == "__main__":
    main(sys.argv[1:])
    
-adoc = []
-
 for fidl_file in inputfiles:
     try:
         processor.import_file(fidl_file.strip())        
     except (LexerException, ParserException, ProcessorException) as e:
         print("ERROR in " + fidl_file.strip() + ": {}".format(e)) 
-
-types_list = {}
 
 # print (processor.packages.values())
 for package in processor.packages.values() :
@@ -74,7 +102,9 @@ for package in processor.packages.values() :
     for fidl_interface in package.interfaces.values():
         adoc.append('\n[[' + fidl_interface.name + ']]')
         adoc.append('= Interface ' + package.name + '.' + fidl_interface.name)
-        adoc.append('\nThis section is generated from the FIDL file for ' +
+        if (fidl_interface.version):
+            adoc.append('\nVersion: ' + str(fidl_interface.version))
+        adoc.append('\nThis section is generated from the Franca IDL file for ' +
            'interface ' + fidl_interface.name + ' in package ' + package.name)
         if package.comments and '@description' in package.comments:
             adoc.append('\nPackage description: ' + package.comments['@description'])
@@ -117,37 +147,12 @@ for package in processor.packages.values() :
                     adoc.append('<<' + fidl_interface.name + '-' + see.strip() + '>>')
             adoc.append('\n')
             in_args = fidl_interface.methods[method].in_args
-            if (in_args) :
-                # print (fidl_interface.methods[method].in_args)
-                adoc.append('Input Parameters: ')
-                adoc.append('[options="header",cols="20%,20%,60%"]')
-                adoc.append('|===')
-                adoc.append('|Type | Name | Description ')
-                for parameter in in_args :
-                    in_arg = in_args[parameter]
-                    comment = ""
-                    if in_arg.comments :
-                        comment = in_arg.comments['@description']
-                    if in_arg and in_arg.name and in_arg.type:
-                        type_name = in_arg.type.name
-                        if not type_name:
-                            type_name = str(in_arg.type)
-                        if isinstance(in_arg.type, ast.PrimitiveType) :
-                            adoc.append('|' + in_arg.type.name + ' | ' + in_arg.name + ' | ' + comment)
-                        else :
-                            adoc.append('| <<' + fidl_interface.name + '-' + type_name + '>> | ' + in_arg.name + ' | ' + comment)
-                        if in_arg.type.name in types_list:
-                            types_list[in_arg.type.name] = types_list[in_arg.type.name] + [fidl_interface.methods[method].name]
-                        else :
-                            types_list[in_arg.type.name] = [fidl_interface.methods[method].name]
-                    else:
-                        adoc.append('Parse error, see: ' + comment)
-            # print (fidl_interface.methods[method].comments)
-            # print (method)
-            # print (fidl_interface.methods[method].in_args)
-                adoc.append('|===\n')
-            else :
-                adoc.append('No parameters\n')
+            out_args = fidl_interface.methods[method].out_args
+
+            process_method_args(in_args, 'Input Parameters: ', fidl_interface)
+            process_method_args(out_args, 'Output Parameters: ', fidl_interface)
+
+
         # print (types_list)
 		
         adoc.append('\n== Structs\n')

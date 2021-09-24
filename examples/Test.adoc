@@ -2,7 +2,9 @@
 [[Test]]
 = Interface testpackage.Test
 
-This section is generated from the FIDL file for interface Test in package testpackage
+Version: 1.0
+
+This section is generated from the Franca IDL file for interface Test in package testpackage
 
 Package description: Description of the testpackage.
 
@@ -48,6 +50,13 @@ Input Parameters:
 |===
 |Type | Name | Description 
 | <<Test-TestType2>> | testParameter | Description of the input parameter testParameter.
+|===
+
+Output Parameters: 
+[options="header",cols="20%,20%,60%"]
+|===
+|Type | Name | Description 
+|String | testParameter2 | Description of the out parameter testParameter2.
 |===
 
 

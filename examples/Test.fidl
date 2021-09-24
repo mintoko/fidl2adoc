@@ -9,6 +9,7 @@ package testpackage
 **>
 interface Test
 {
+    version { major 1 minor 0 }
 
     <**
     @description : Attribute testAttribute has some description.
@@ -39,6 +40,12 @@ interface Test
             @description : Description of the input parameter testParameter.
             **>
             TestType2 testParameter
+        }
+        out {
+            <**
+            @description : Description of the out parameter testParameter2.
+            **>
+            String testParameter2
         }
     }
 
