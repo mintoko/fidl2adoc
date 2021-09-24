@@ -1,28 +1,17 @@
 = fidl2adoc
 
 == Introduction
+fidl2adoc is a Python script, which generates documentation from Franca IDL (.fidl) files in AsciiDoc (.adoc), see example link:examples/Test.fidl[Test.fidl] with corresponding link:examples/Test.adoc[Test.adoc].
 
-fidl2adoc is a Python script, which generates documentation from Franca IDL (.fidl) files in AsciiDoc (.adoc). It uses Python library https://github.com/zayfod/pyfranca[PyFranca] to parse Franca IDL files, generates the documentation into an output AsciiDoc file and adds links between Attributes, Methods, Datatypes etc., see example link:examples/Test.fidl[Test.fidl] with corresponding link:examples/Test.adoc[Test.adoc].
+== Dependencies
+Latest version 0.4.1 of https://github.com/zayfod/pyfranca[PyFranca].
 
-== Usage
+Install with:
 
-=== Dependencies
-Latest version 0.4.1 of https://github.com/zayfod/pyfranca[PyFranca]. To install the library, call:
-  
   pip install pyfranca
 
-=== Command line
-
-To generate Test.adoc from Test.fidl, call:
+== Usage
+Generate Test.adoc from Test.fidl with:
 
   python ./fidl2adoc/fidl2adoc.py -i ./examples/Test.fidl -o ./examples/Test.adoc
 
-== Limitations / Next steps
-
-The input files must be parsable with https://github.com/zayfod/pyfranca[PyFranca].
-
-The following Franca IDL features are not yet supported in fidl2adoc, but will be available in the future:
-
-. TypeCollections
-. Inline Array Definition
-. Broadcasts
