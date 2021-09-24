@@ -26,5 +26,3 @@ The following Franca IDL features are not yet supported in fidl2adoc, but will b
 . TypeCollections
 . Inline Array Definition
 . Broadcasts
-. Interface version
-. Out parameters from methods
