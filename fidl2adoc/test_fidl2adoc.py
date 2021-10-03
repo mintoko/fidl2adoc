@@ -3,9 +3,9 @@ import hashlib
 
 
 def test_output():
-    main(['-i', './examples/Test.fidl', '-o', './examples/Test2.adoc'])
-    hash1 = hashlib.md5(open('./examples/Test2.adoc','rb').read()).hexdigest()
-    hash2 = hashlib.md5(open('./examples/Test.adoc','rb').read()).hexdigest()
+    main(['-i', '../examples/Test.fidl', '-o', '../examples/Test2.adoc'])
+    hash1 = hashlib.md5(open('../examples/Test2.adoc','rb').read()).hexdigest()
+    hash2 = hashlib.md5(open('../examples/Test.adoc','rb').read()).hexdigest()
     assert(hash1 == hash2)
 
 
