@@ -1,0 +1,22 @@
+name: Pep8
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pep8
+    - name: Analysing the code with pep8
+      run: |
+        pep8 ./fidl2adoc/fidl2adoc.py
