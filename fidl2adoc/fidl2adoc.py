@@ -406,5 +406,6 @@ def main(argv):
     with open(outputfile, 'w') as f:
         f.write('\n'.join(adoc))
 
+
 if __name__ == "__main__":
     main(sys.argv[1:])
