@@ -2,32 +2,13 @@
 [[TestTypes]]
 = Type Collection testpackage.TestTypes
 
-== Structs
-
-[[TestTypes-TestCollectionStruct]]
-=== Struct TestCollectionStruct
-
-Description of TestCollectionStruct
-
-
-Struct fields: 
-[options="header",cols="20%,20%,60%"]
-|===
-|Type | Name | Description 
-| String | structParam1 | Description of structParam1
-| UInt32 | structParam2 | Description of structParam2
-| <<TestTypes-TestCollectionEnum>> | structParam3 | Description of structParam3
-|===
-
 == Enumerations
 
 [[TestTypes-TestCollectionEnum]]
 === Enumeration TestCollectionEnum
 
-Description of TestCollectionEnum
 
-Used in: 
-<<TestTypes-TestCollectionStruct>>
+Description of TestCollectionEnum
 
 [options="header",cols="20%,20%,60%"]
 |===
@@ -36,20 +17,16 @@ Used in:
 |APP_2|1|
 |===
 
-== Arrays
-
-
 [[TestTypes2]]
 = Type Collection testpackage.TestTypes2
 
-== Structs
-
 == Enumerations
 
-[[TestTypes2-TestCollectionEnum2]]
-=== Enumeration TestCollectionEnum2
+[[TestTypes2-TestCollectionEnum]]
+=== Enumeration TestCollectionEnum
 
-Description of TestTypes2.TestCollectionEnum2
+
+Description of TestTypes2.TestCollectionEnum
 
 [options="header",cols="20%,20%,60%"]
 |===
@@ -57,9 +34,6 @@ Description of TestTypes2.TestCollectionEnum2
 |ON|0|
 |OFF|1|
 |===
-
-== Arrays
-
 
 [[Test]]
 = Interface testpackage.Test
@@ -78,7 +52,7 @@ Interface description: Description of the Test interface
 [[Test-testAttribute]]
 === Attribute testAttribute
 
-Attribute data type: Array of <<Test-TestType1>>
+Attribute data type: <<Test-TestType1>>
 
 Attribute testAttribute has some description.
     
@@ -93,13 +67,6 @@ Server -> Client: set testAttribute
 
 See also: 
 <<Test-TestMethod>>
-
-[[Test-testAttribute2]]
-=== Attribute testAttribute2
-
-Attribute data type: <<Test-TestArrayType>>
-
-Attribute testAttribute has some description.
 
 
 == Methods
@@ -125,12 +92,8 @@ Output Parameters:
 [options="header",cols="20%,20%,60%"]
 |===
 |Type | Name | Description 
-| String | testParameter2 | Description of the out parameter testParameter2.
+|String | testParameter2 | Description of the out parameter testParameter2.
 |===
-
-
-
-== Broadcasts
 
 
 == Structs
@@ -148,8 +111,8 @@ Struct fields:
 [options="header",cols="20%,20%,60%"]
 |===
 |Type | Name | Description 
-| String | structParam1 | Description of structParam1
-| Array of UInt32 | structParam2 | Description of structParam2
+|String | structParam1 | Description of structParam1
+|UInt32 | structParam2 | Description of structParam2
 | <<Test-TestType1>> | structParam3 | Description of structParam3
 |===
 
@@ -161,6 +124,7 @@ Struct fields:
 Description of TestType1
 
 Used in: 
+<<Test-testAttribute>>
 <<Test-TestType2>>
 
 [options="header",cols="20%,20%,60%"]
@@ -172,22 +136,31 @@ Used in:
 |SHUTDOWN|4|Description of SHUTDOWN
 |NONE|99|Description of NONE
 |===
+[[Test-TestCollectionEnum]]
+=== Enumeration TestCollectionEnum
+
+Description of Test.TestCollectionEnum
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Enumerator | Value | Description 
+|APP_1|0|
+|APP_2|1|
+|APP_3|2|
+|===
 
 == Arrays
 
 [[Test-TestArrayType]]
 === Array TestArrayType
 
-Array element data type: <<Test-TestCollectionEnum>>
+Array element data type: <<Test-TestTypes2.TestCollectionEnum>>
 Description of TestArrayType
-
-Used in: 
-<<Test-testAttribute2>>
 
 [[Test2]]
 = Interface testpackage.Test2
 
-Version: 2.0
+Version: 1.0
 
 This section is generated from the Franca IDL file for interface Test2 in package testpackage
 
@@ -201,38 +174,24 @@ Interface description: Description of the Test interface
 [[Test2-testAttribute]]
 === Attribute testAttribute
 
-Attribute data type: Array of String
+Attribute data type: String
 
-Attribute testAttribute of interface Test2 has some description.
+Attribute testAttribute has some description.
     
 New paragraph in the attribute description. testAttribute is updated by sending
 method TestMethod.
 
-[plantuml, test-seq-2]
+[plantuml, test-seq-1]
 ----
 Client -> Server: testMethod(params)
 Server -> Client: set testAttribute
 ----
 
+See also: 
+<<Test2-TestMethod>>
+
 
 == Methods
-
-
-
-== Broadcasts
-
-[[Test2-b1]]
-=== Broadcast b1
-
-Description of broadcast b1
-
-Output Parameters: 
-[options="header",cols="20%,20%,60%"]
-|===
-|Type | Name | Description 
-| UInt8 | mb1 | Description of broadcast b1.mb1
-| UInt8 | mb2 | Description of broadcast b1.mb2
-|===
 
 
 == Structs

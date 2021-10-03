@@ -4,6 +4,50 @@
 package testpackage
 
 <**
+   @description : Description of type collection TestTypes.
+**>
+typeCollection TestTypes {
+    <**
+    @description : Description of TestCollectionEnum
+    **>
+    enumeration TestCollectionEnum {
+        APP_1
+        APP_2
+    }
+
+    <**
+    @description : Description of TestCollectionStruct
+    **>
+    struct TestCollectionStruct {
+        <**
+        @description : Description of structParam1
+        **>
+        String structParam1
+        <**
+        @description : Description of structParam2
+        **>
+        UInt32 structParam2
+        <**
+        @description : Description of structParam3
+        **>
+        TestCollectionEnum structParam3
+    }
+}
+
+<**
+   @description : Description of the type collection TestTypes2.
+**>
+typeCollection TestTypes2 {
+    <**
+    @description : Description of TestTypes2.TestCollectionEnum2
+    **>
+    enumeration TestCollectionEnum2 {
+        ON
+        OFF
+    }
+}
+	
+<**
    @description : Description of the Test interface
    @author : Author
 **>
@@ -25,8 +69,13 @@ interface Test
 
     @see: TestMethod
     **>
-    attribute TestType1 testAttribute
-    
+    attribute TestType1[] testAttribute
+
+    <**
+    @description : Attribute testAttribute has some description.
+    **>
+    attribute TestArrayType testAttribute2
+        
     <**
     @description :
         Description of TestMethod.
@@ -60,7 +109,7 @@ interface Test
         <**
         @description : Description of structParam2
         **>
-        UInt32 structParam2
+        UInt32[] structParam2
         <**
         @description : Description of structParam3
         **>
@@ -96,6 +145,48 @@ interface Test
     <**
     @description : Description of TestArrayType
     **> 
-    array TestArrayType of String
+    array TestArrayType of TestCollectionEnum
+
+}
+
+
+<**
+   @description : Description of the Test interface
+   @author : Author
+**>
+interface Test2
+{
+    version { major 2 minor 0 }
+
+    <**
+    @description : Attribute testAttribute of interface Test2 has some description.
+    
+        New paragraph in the attribute description. testAttribute is updated by sending
+        method TestMethod.
+        
+        [plantuml, test-seq-2]
+        ----
+        Client -> Server: testMethod(params)
+        Server -> Client: set testAttribute
+        ----
+
+    **>
+    attribute String[] testAttribute
+
+    <**
+    @description : Description of broadcast b1
+    **> 	
+    broadcast b1 {
+        out{
+            <**
+            @description : Description of broadcast b1.mb1
+            **> 
+            UInt8 mb1
+            <**
+            @description : Description of broadcast b1.mb2
+            **> 
+            UInt8 mb2
+        }
+    }
 
 }
