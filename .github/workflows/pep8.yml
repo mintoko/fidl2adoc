@@ -19,4 +19,4 @@ jobs:
         pip install pep8
     - name: Analysing the code with pep8
       run: |
-        pep8 ./fidl2adoc/fidl2adoc.py
+        pep8 --count ./fidl2adoc/fidl2adoc.py
