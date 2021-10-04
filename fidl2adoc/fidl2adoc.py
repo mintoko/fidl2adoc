@@ -324,6 +324,45 @@ def process_typecollection(package, tc):
     adoc.append('= Type Collection ' + package.name + '.' + tc.name)
 
 
+def iterate_interface(package, fidl_interface):
+    process_interface(package, fidl_interface)
+    process_attributes(fidl_interface.attributes)
+    for attribute in fidl_interface.attributes:
+        attr = fidl_interface.attributes[attribute]
+        process_attribute(fidl_interface.name, attr.name, attr.type,
+                          attr.type.name,
+                          get_comment(attr, '@description'),
+                          get_comment(attr, '@see'))
+    process_methods(fidl_interface.methods)
+    for method in fidl_interface.methods:
+        method_obj = fidl_interface.methods[method]
+        process_method(fidl_interface.name, method_obj,
+                       get_comment(method_obj, '@description'),
+                       get_comment(method_obj, '@see'))
+    process_broadcasts(fidl_interface.broadcasts)
+    for broadcast in fidl_interface.broadcasts:
+        broadcast_obj = fidl_interface.broadcasts[broadcast]
+        process_broadcast(fidl_interface.name, broadcast_obj,
+                          get_comment(broadcast_obj, '@description'),
+                          get_comment(broadcast_obj, '@see'))
+    process_structs(fidl_interface.structs)
+    for struct in fidl_interface.structs:
+        struct_data = fidl_interface.structs[struct]
+        process_struct(fidl_interface.name, struct_data,
+                       get_comment(struct_data, '@description'))
+    process_enumerations(fidl_interface.enumerations)
+    for enumeration in fidl_interface.enumerations:
+        enum = fidl_interface.enumerations[enumeration]
+        process_enumeration(fidl_interface.name, enum.name,
+                            enum.enumerators,
+                            get_comment(enum, '@description'))
+    process_arrays(fidl_interface.arrays)
+    for array in fidl_interface.arrays:
+        array_data = fidl_interface.arrays[array]
+        process_array(fidl_interface.name, array_data,
+                      get_comment(array_data, '@description'))
+
+
 def iterate_fidl(processor):
     # print (processor.packages.values())
     for package in processor.packages.values():
@@ -347,42 +386,7 @@ def iterate_fidl(processor):
                 process_array(tc.name, array_data,
                               get_comment(array_data, '@description'))
         for fidl_interface in package.interfaces.values():
-            process_interface(package, fidl_interface)
-            process_attributes(fidl_interface.attributes)
-            for attribute in fidl_interface.attributes:
-                attr = fidl_interface.attributes[attribute]
-                process_attribute(fidl_interface.name, attr.name, attr.type,
-                                  attr.type.name,
-                                  get_comment(attr, '@description'),
-                                  get_comment(attr, '@see'))
-            process_methods(fidl_interface.methods)
-            for method in fidl_interface.methods:
-                method_obj = fidl_interface.methods[method]
-                process_method(fidl_interface.name, method_obj,
-                               get_comment(method_obj, '@description'),
-                               get_comment(method_obj, '@see'))
-            process_broadcasts(fidl_interface.broadcasts)
-            for broadcast in fidl_interface.broadcasts:
-                broadcast_obj = fidl_interface.broadcasts[broadcast]
-                process_broadcast(fidl_interface.name, broadcast_obj,
-                                  get_comment(broadcast_obj, '@description'),
-                                  get_comment(broadcast_obj, '@see'))
-            process_structs(fidl_interface.structs)
-            for struct in fidl_interface.structs:
-                struct_data = fidl_interface.structs[struct]
-                process_struct(fidl_interface.name, struct_data,
-                               get_comment(struct_data, '@description'))
-            process_enumerations(fidl_interface.enumerations)
-            for enumeration in fidl_interface.enumerations:
-                enum = fidl_interface.enumerations[enumeration]
-                process_enumeration(fidl_interface.name, enum.name,
-                                    enum.enumerators,
-                                    get_comment(enum, '@description'))
-            process_arrays(fidl_interface.arrays)
-            for array in fidl_interface.arrays:
-                array_data = fidl_interface.arrays[array]
-                process_array(fidl_interface.name, array_data,
-                              get_comment(array_data, '@description'))
+            iterate_interface(package, fidl_interface)
 
 
 def main(argv):
