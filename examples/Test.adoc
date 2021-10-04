@@ -36,14 +36,8 @@ Used in:
 |APP_2|1|
 |===
 
-== Arrays
-
-
 [[TestTypes2]]
 = Type Collection testpackage.TestTypes2
-
-== Structs
-
 == Enumerations
 
 [[TestTypes2-TestCollectionEnum2]]
@@ -57,9 +51,6 @@ Description of TestTypes2.TestCollectionEnum2
 |ON|0|
 |OFF|1|
 |===
-
-== Arrays
-
 
 [[Test]]
 = Interface testpackage.Test
@@ -127,10 +118,6 @@ Output Parameters:
 |Type | Name | Description 
 | String | testParameter2 | Description of the out parameter testParameter2.
 |===
-
-
-
-== Broadcasts
 
 
 == Structs
@@ -215,10 +202,6 @@ Server -> Client: set testAttribute
 ----
 
 
-== Methods
-
-
-
 == Broadcasts
 
 [[Test2-b1]]
@@ -233,11 +216,3 @@ Output Parameters:
 | UInt8 | mb1 | Description of broadcast b1.mb1
 | UInt8 | mb2 | Description of broadcast b1.mb2
 |===
-
-
-== Structs
-
-== Enumerations
-
-
-== Arrays

@@ -112,11 +112,12 @@ def process_method(if_name, method, comment_descr, comment_see):
                         method.name)
 
 
-def process_methods():
+def process_methods(methods):
     global adoc
-    adoc.append('\n')
-    adoc.append('== Methods')
-    adoc.append('')
+    if methods:
+        adoc.append('\n')
+        adoc.append('== Methods')
+        adoc.append('')
 
 
 def process_attribute(interface_name, attr_name, attr_type, attr_type_name,
@@ -141,9 +142,10 @@ def process_attribute(interface_name, attr_name, attr_type, attr_type_name,
             adoc.append('<<' + interface_name + '-' + see.strip() + '>>')
 
 
-def process_attributes():
+def process_attributes(attributes):
     global adoc
-    adoc.append('\n== Attributes\n')
+    if attributes:
+        adoc.append('\n== Attributes\n')
 
 
 def process_broadcast_args(args, title, if_name, method_name):
@@ -189,11 +191,12 @@ def process_broadcast(if_name, method, comment_descr, comment_see):
                            method.name)
 
 
-def process_broadcasts():
+def process_broadcasts(broadcasts):
     global adoc
-    adoc.append('\n')
-    adoc.append('== Broadcasts')
-    adoc.append('')
+    if broadcasts:
+        adoc.append('\n')
+        adoc.append('== Broadcasts')
+        adoc.append('')
 
 
 def process_struct_field(interface_name, struct, field, description_comment):
@@ -240,9 +243,10 @@ def process_struct(if_name, struct, description_comment):
             print('ERROR: No struct fields found\n')
 
 
-def process_structs():
+def process_structs(structs):
     global adoc
-    adoc.append('\n== Structs\n')
+    if structs:
+        adoc.append('\n== Structs\n')
 
 
 def process_enumeration(interface_name, enum_name, enumerators,
@@ -273,9 +277,10 @@ def process_enumeration(interface_name, enum_name, enumerators,
 
 
 # Starts an ASCIIDoc section for Enumerations
-def process_enumerations():
+def process_enumerations(enumerations):
     global adoc
-    adoc.append('== Enumerations\n')
+    if enumerations:
+        adoc.append('== Enumerations\n')
 
 
 def process_array(if_name, array, comment):
@@ -292,9 +297,10 @@ def process_array(if_name, array, comment):
 
 
 # Starts an ASCIIDoc section for Arrays
-def process_arrays():
+def process_arrays(arrays):
     global adoc
-    adoc.append('\n== Arrays\n')
+    if arrays:
+        adoc.append('\n== Arrays\n')
 
 
 def process_interface(package, interface):
@@ -316,6 +322,67 @@ def process_typecollection(package, tc):
     global adoc
     adoc.append('\n[[' + tc.name + ']]')
     adoc.append('= Type Collection ' + package.name + '.' + tc.name)
+
+
+def iterate_fidl(processor):
+    # print (processor.packages.values())
+    for package in processor.packages.values():
+        # print (package.name)
+        for typecollection in package.typecollections:
+            tc = package.typecollections[typecollection]
+            process_typecollection(package, tc)
+            process_structs(tc.structs)
+            for struct in tc.structs:
+                struct_data = tc.structs[struct]
+                process_struct(tc.name, struct_data,
+                               get_comment(struct_data, '@description'))
+            process_enumerations(tc.enumerations)
+            for enumeration in tc.enumerations:
+                enum = tc.enumerations[enumeration]
+                process_enumeration(tc.name, enum.name, enum.enumerators,
+                                    get_comment(enum, '@description'))
+            process_arrays(tc.arrays)
+            for array in tc.arrays:
+                array_data = tc.arrays[array]
+                process_array(tc.name, array_data,
+                              get_comment(array_data, '@description'))
+        for fidl_interface in package.interfaces.values():
+            process_interface(package, fidl_interface)
+            process_attributes(fidl_interface.attributes)
+            for attribute in fidl_interface.attributes:
+                attr = fidl_interface.attributes[attribute]
+                process_attribute(fidl_interface.name, attr.name, attr.type,
+                                  attr.type.name,
+                                  get_comment(attr, '@description'),
+                                  get_comment(attr, '@see'))
+            process_methods(fidl_interface.methods)
+            for method in fidl_interface.methods:
+                method_obj = fidl_interface.methods[method]
+                process_method(fidl_interface.name, method_obj,
+                               get_comment(method_obj, '@description'),
+                               get_comment(method_obj, '@see'))
+            process_broadcasts(fidl_interface.broadcasts)
+            for broadcast in fidl_interface.broadcasts:
+                broadcast_obj = fidl_interface.broadcasts[broadcast]
+                process_broadcast(fidl_interface.name, broadcast_obj,
+                                  get_comment(broadcast_obj, '@description'),
+                                  get_comment(broadcast_obj, '@see'))
+            process_structs(fidl_interface.structs)
+            for struct in fidl_interface.structs:
+                struct_data = fidl_interface.structs[struct]
+                process_struct(fidl_interface.name, struct_data,
+                               get_comment(struct_data, '@description'))
+            process_enumerations(fidl_interface.enumerations)
+            for enumeration in fidl_interface.enumerations:
+                enum = fidl_interface.enumerations[enumeration]
+                process_enumeration(fidl_interface.name, enum.name,
+                                    enum.enumerators,
+                                    get_comment(enum, '@description'))
+            process_arrays(fidl_interface.arrays)
+            for array in fidl_interface.arrays:
+                array_data = fidl_interface.arrays[array]
+                process_array(fidl_interface.name, array_data,
+                              get_comment(array_data, '@description'))
 
 
 def main(argv):
@@ -344,64 +411,7 @@ def main(argv):
         except (LexerException, ParserException, ProcessorException) as e:
             print("ERROR in " + fidl_file.strip() + ": {}".format(e))
 
-    # print (processor.packages.values())
-    for package in processor.packages.values():
-        # print (package.name)
-        for typecollection in package.typecollections:
-            tc = package.typecollections[typecollection]
-            process_typecollection(package, tc)
-            process_structs()
-            for struct in tc.structs:
-                struct_data = tc.structs[struct]
-                process_struct(tc.name, struct_data,
-                               get_comment(struct_data, '@description'))
-            process_enumerations()
-            for enumeration in tc.enumerations:
-                enum = tc.enumerations[enumeration]
-                process_enumeration(tc.name, enum.name, enum.enumerators,
-                                    get_comment(enum, '@description'))
-            process_arrays()
-            for array in tc.arrays:
-                array_data = tc.arrays[array]
-                process_array(tc.name, array_data,
-                              get_comment(array_data, '@description'))
-        for fidl_interface in package.interfaces.values():
-            process_interface(package, fidl_interface)
-            process_attributes()
-            for attribute in fidl_interface.attributes:
-                attr = fidl_interface.attributes[attribute]
-                process_attribute(fidl_interface.name, attr.name, attr.type,
-                                  attr.type.name,
-                                  get_comment(attr, '@description'),
-                                  get_comment(attr, '@see'))
-            process_methods()
-            for method in fidl_interface.methods:
-                method_obj = fidl_interface.methods[method]
-                process_method(fidl_interface.name, method_obj,
-                               get_comment(method_obj, '@description'),
-                               get_comment(method_obj, '@see'))
-            process_broadcasts()
-            for broadcast in fidl_interface.broadcasts:
-                broadcast_obj = fidl_interface.broadcasts[broadcast]
-                process_broadcast(fidl_interface.name, broadcast_obj,
-                                  get_comment(broadcast_obj, '@description'),
-                                  get_comment(broadcast_obj, '@see'))
-            process_structs()
-            for struct in fidl_interface.structs:
-                struct_data = fidl_interface.structs[struct]
-                process_struct(fidl_interface.name, struct_data,
-                               get_comment(struct_data, '@description'))
-            process_enumerations()
-            for enumeration in fidl_interface.enumerations:
-                enum = fidl_interface.enumerations[enumeration]
-                process_enumeration(fidl_interface.name, enum.name,
-                                    enum.enumerators,
-                                    get_comment(enum, '@description'))
-            process_arrays()
-            for array in fidl_interface.arrays:
-                array_data = fidl_interface.arrays[array]
-                process_array(fidl_interface.name, array_data,
-                              get_comment(array_data, '@description'))
+    iterate_fidl(processor)
 
     with open(outputfile, 'w') as f:
         f.write('\n'.join(adoc))
