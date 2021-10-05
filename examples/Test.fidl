@@ -11,7 +11,13 @@ typeCollection TestTypes {
     @description : Description of TestCollectionEnum
     **>
     enumeration TestCollectionEnum {
+        <**
+        @description : Application 1
+        **>
         APP_1
+        <**
+        @description : Application 2
+        **>
         APP_2
     }
 
@@ -42,7 +48,13 @@ typeCollection TestTypes2 {
     @description : Description of TestTypes2.TestCollectionEnum2
     **>
     enumeration TestCollectionEnum2 {
+        <**
+        @description : Enum is On
+        **>
         ON
+        <**
+        @description : Enum is off
+        **>
         OFF
     }
 }

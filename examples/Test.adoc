@@ -32,8 +32,8 @@ Used in:
 [options="header",cols="20%,20%,60%"]
 |===
 |Enumerator | Value | Description 
-|APP_1|0|
-|APP_2|1|
+|APP_1|0|Application 1
+|APP_2|1|Application 2
 |===
 
 [[TestTypes2]]
@@ -48,8 +48,8 @@ Description of TestTypes2.TestCollectionEnum2
 [options="header",cols="20%,20%,60%"]
 |===
 |Enumerator | Value | Description 
-|ON|0|
-|OFF|1|
+|ON|0|Enum is On
+|OFF|1|Enum is off
 |===
 
 [[Test]]
