@@ -11,8 +11,24 @@ types_list = {}
 tc_int_types_map = {}
 
 
-def get_namespace(type):
-    return "namespace"
+def get_namespace(package, type):
+    ns = None
+    try:
+        type.namespace.__getitem__(type.name)
+        return type.namespace.name
+    except KeyError:
+        print('Item ' + str(type) + ' not found in interface.')
+    for tc in package.typecollections.values():
+        for struct in tc.structs.values():
+            if type.name == struct.name:
+                return tc.name
+        for enum in tc.enumerations.values():
+            if type.name == enum.name:
+                return tc.name
+        for array in tc.arrays.values():
+            if type == array.name:
+                return tc.name
+    return ns
 
 
 def fix_descr_intent(description):
@@ -53,7 +69,7 @@ def get_comment(obj, type):
     return comment
 
 
-def get_type_name(type, if_name):
+def get_type_name(package, type, if_name):
     name = ''
     if isinstance(type, ast.PrimitiveType):
         name = type.name
@@ -61,13 +77,15 @@ def get_type_name(type, if_name):
         if isinstance(type.type, ast.PrimitiveType):
             name = 'Array of ' + type.type.name
         else:
+            if_name = get_namespace(package, type.type)
             name = 'Array of <<' + if_name + '-' + type.type.name + '>>'
     else:
+        if_name = get_namespace(package, type)
         name = '<<' + if_name + '-' + type.name + '>>'
     return name
 
 
-def process_method_args(args, title, if_name, method_name):
+def process_method_args(package, args, title, if_name, method_name):
     global adoc
     if not args:
         return
@@ -81,7 +99,7 @@ def process_method_args(args, title, if_name, method_name):
         comment = ""
         if arg and arg.comments:
             comment = arg.comments['@description']
-        adoc.append('| ' + get_type_name(arg.type, if_name) + ' | ' +
+        adoc.append('| ' + get_type_name(package, arg.type, if_name) + ' | ' +
                     arg.name + ' | ' + comment)
         if arg.type.name in types_list:
             # Todo: check used in for inline arrays
@@ -92,7 +110,7 @@ def process_method_args(args, title, if_name, method_name):
     adoc.append('|===\n')
 
 
-def process_method(if_name, method, comment_descr, comment_see):
+def process_method(package, if_name, method, comment_descr, comment_see):
     global types_list
     global adoc
     adoc.append('[[' + if_name + '-' + method.name + ']]')
@@ -106,9 +124,9 @@ def process_method(if_name, method, comment_descr, comment_see):
         for see in sees:
             adoc.append('<<' + if_name + '-' + see.strip() + '>>')
         adoc.append('\n')
-    process_method_args(method.in_args, 'Input Parameters: ', if_name,
+    process_method_args(package, method.in_args, 'Input Parameters: ', if_name,
                         method.name)
-    process_method_args(method.out_args, 'Output Parameters: ', if_name,
+    process_method_args(package, method.out_args, 'Output Parameters: ', if_name,
                         method.name)
 
 
@@ -120,14 +138,14 @@ def process_methods(methods):
         adoc.append('')
 
 
-def process_attribute(interface_name, attr_name, attr_type, attr_type_name,
+def process_attribute(package, interface_name, attr_name, attr_type, attr_type_name,
                       comment_description, comment_see):
     global types_list
     global adoc
     adoc.append('\n[[' + interface_name + '-' + attr_name + ']]')
     adoc.append('=== Attribute ' + attr_name)
     adoc.append('\nAttribute data type: ' +
-                get_type_name(attr_type, interface_name))
+                get_type_name(package, attr_type, interface_name))
     if attr_type_name in types_list:
         types_list[attr_type_name] = types_list[attr_type_name] + [attr_name]
     else:
@@ -148,7 +166,7 @@ def process_attributes(attributes):
         adoc.append('\n== Attributes\n')
 
 
-def process_broadcast_args(args, title, if_name, method_name):
+def process_broadcast_args(package, args, title, if_name, method_name):
     global adoc
     if not args:
         return
@@ -162,7 +180,7 @@ def process_broadcast_args(args, title, if_name, method_name):
         comment = ""
         if arg and arg.comments:
             comment = arg.comments['@description']
-        adoc.append('| ' + get_type_name(arg.type, if_name) + ' | ' +
+        adoc.append('| ' + get_type_name(package, arg.type, if_name) + ' | ' +
                     arg.name + ' | ' + comment)
         if arg.type.name in types_list:
             # Todo: check used in for inline arrays
@@ -173,7 +191,7 @@ def process_broadcast_args(args, title, if_name, method_name):
     adoc.append('|===\n')
 
 
-def process_broadcast(if_name, method, comment_descr, comment_see):
+def process_broadcast(package, if_name, method, comment_descr, comment_see):
     global types_list
     global adoc
     adoc.append('[[' + if_name + '-' + method.name + ']]')
@@ -187,7 +205,7 @@ def process_broadcast(if_name, method, comment_descr, comment_see):
         for see in sees:
             adoc.append('<<' + if_name + '-' + see.strip() + '>>')
         adoc.append('\n')
-    process_broadcast_args(method.out_args, 'Output Parameters: ', if_name,
+    process_broadcast_args(package, method.out_args, 'Output Parameters: ', if_name,
                            method.name)
 
 
@@ -199,13 +217,13 @@ def process_broadcasts(broadcasts):
         adoc.append('')
 
 
-def process_struct_field(interface_name, struct, field, description_comment):
+def process_struct_field(package, interface_name, struct, field, description_comment):
     global types_list
     global adoc
     comment = ""
     if description_comment:
         comment = description_comment
-    adoc.append('| ' + get_type_name(field.type, interface_name) + ' | ' +
+    adoc.append('| ' + get_type_name(package, field.type, interface_name) + ' | ' +
                 field.name + ' | ' + comment)
     if field.type.name in types_list:
         types_list[field.type.name] += [struct.name]
@@ -213,7 +231,7 @@ def process_struct_field(interface_name, struct, field, description_comment):
         types_list[field.type.name] = [struct.name]
 
 
-def process_struct(if_name, struct, description_comment):
+def process_struct(package, if_name, struct, description_comment):
     global types_list
     global adoc
     struct_name = struct.name
@@ -237,7 +255,7 @@ def process_struct(if_name, struct, description_comment):
                 field_obj = fields[field]
                 if field_obj.comments and '@description' in field_obj.comments:
                     comment = field_obj.comments['@description']
-                process_struct_field(if_name, struct, field_obj, comment)
+                process_struct_field(package, if_name, struct, field_obj, comment)
             adoc.append('|===\n')
         else:
             print('ERROR: No struct fields found\n')
@@ -249,7 +267,7 @@ def process_structs(structs):
         adoc.append('\n== Structs\n')
 
 
-def process_enumeration(interface_name, enum_name, enumerators,
+def process_enumeration(package, interface_name, enum_name, enumerators,
                         comment_description):
     global types_list
     adoc.append('[[' + interface_name + '-' + enum_name + ']]')
@@ -283,11 +301,11 @@ def process_enumerations(enumerations):
         adoc.append('== Enumerations\n')
 
 
-def process_array(if_name, array, comment):
+def process_array(package, if_name, array, comment):
     adoc.append('[[' + if_name + '-' + array.name + ']]')
     adoc.append('=== Array ' + array.name + '\n')
     adoc.append('Array element data type: ' +
-                get_type_name(array.type, if_name))
+                get_type_name(package, array.type, if_name) + '\n')
     if comment:
         adoc.append(array.comments['@description'])
     if array.name in types_list:
@@ -329,37 +347,37 @@ def iterate_interface(package, fidl_interface):
     process_attributes(fidl_interface.attributes)
     for attribute in fidl_interface.attributes:
         attr = fidl_interface.attributes[attribute]
-        process_attribute(fidl_interface.name, attr.name, attr.type,
+        process_attribute(package, fidl_interface.name, attr.name, attr.type,
                           attr.type.name,
                           get_comment(attr, '@description'),
                           get_comment(attr, '@see'))
     process_methods(fidl_interface.methods)
     for method in fidl_interface.methods:
         method_obj = fidl_interface.methods[method]
-        process_method(fidl_interface.name, method_obj,
+        process_method(package, fidl_interface.name, method_obj,
                        get_comment(method_obj, '@description'),
                        get_comment(method_obj, '@see'))
     process_broadcasts(fidl_interface.broadcasts)
     for broadcast in fidl_interface.broadcasts:
         broadcast_obj = fidl_interface.broadcasts[broadcast]
-        process_broadcast(fidl_interface.name, broadcast_obj,
+        process_broadcast(package, fidl_interface.name, broadcast_obj,
                           get_comment(broadcast_obj, '@description'),
                           get_comment(broadcast_obj, '@see'))
     process_structs(fidl_interface.structs)
     for struct in fidl_interface.structs:
         struct_data = fidl_interface.structs[struct]
-        process_struct(fidl_interface.name, struct_data,
+        process_struct(package, fidl_interface.name, struct_data,
                        get_comment(struct_data, '@description'))
     process_enumerations(fidl_interface.enumerations)
     for enumeration in fidl_interface.enumerations:
         enum = fidl_interface.enumerations[enumeration]
-        process_enumeration(fidl_interface.name, enum.name,
+        process_enumeration(package, fidl_interface.name, enum.name,
                             enum.enumerators,
                             get_comment(enum, '@description'))
     process_arrays(fidl_interface.arrays)
     for array in fidl_interface.arrays:
         array_data = fidl_interface.arrays[array]
-        process_array(fidl_interface.name, array_data,
+        process_array(package, fidl_interface.name, array_data,
                       get_comment(array_data, '@description'))
 
 
@@ -373,20 +391,22 @@ def iterate_fidl(processor):
             process_structs(tc.structs)
             for struct in tc.structs:
                 struct_data = tc.structs[struct]
-                process_struct(tc.name, struct_data,
+                process_struct(package, tc.name, struct_data,
                                get_comment(struct_data, '@description'))
+                print(get_namespace(package, struct_data))
             process_enumerations(tc.enumerations)
             for enumeration in tc.enumerations:
                 enum = tc.enumerations[enumeration]
-                process_enumeration(tc.name, enum.name, enum.enumerators,
+                process_enumeration(package, tc.name, enum.name, enum.enumerators,
                                     get_comment(enum, '@description'))
             process_arrays(tc.arrays)
             for array in tc.arrays:
                 array_data = tc.arrays[array]
-                process_array(tc.name, array_data,
+                process_array(package, tc.name, array_data,
                               get_comment(array_data, '@description'))
         for fidl_interface in package.interfaces.values():
             iterate_interface(package, fidl_interface)
+
 
 
 def main(argv):

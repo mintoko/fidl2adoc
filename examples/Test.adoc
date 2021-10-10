@@ -165,7 +165,8 @@ Used in:
 [[Test-TestArrayType]]
 === Array TestArrayType
 
-Array element data type: <<Test-TestCollectionEnum>>
+Array element data type: <<TestTypes-TestCollectionEnum>>
+
 Description of TestArrayType
 
 Used in: 
