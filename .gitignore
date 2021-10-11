@@ -1,2 +1,4 @@
 *.pyc
 
+.coverage
+examples/Test2.adoc
