@@ -333,9 +333,9 @@ def process_typecollection(package, tc):
     adoc.append('= Type Collection ' + package.name + '.' + tc.name)
 
 
-def iterate_interface(package, fidl_interface, process_typecollection, process_structs,
-                 process_struct, process_enumerations, process_enumeration,
-                 process_arrays, process_array):
+def iterate_interface(package, fidl_interface, process_typecollection,
+                      process_structs, process_struct, process_enumerations,
+                      process_enumeration, process_arrays, process_array):
     process_interface(package, fidl_interface)
     process_attributes(fidl_interface.attributes)
     for attribute in fidl_interface.attributes:
@@ -398,9 +398,10 @@ def iterate_fidl(processor, process_typecollection, process_structs,
                 process_array(package, tc.name, array_data,
                               get_comment(array_data, '@description'))
         for fidl_interface in package.interfaces.values():
-            iterate_interface(package, fidl_interface, process_typecollection, process_structs,
-                 process_struct, process_enumerations, process_enumeration,
-                 process_arrays, process_array)
+            iterate_interface(package, fidl_interface, process_typecollection,
+                              process_structs, process_struct,
+                              process_enumerations, process_enumeration,
+                              process_arrays, process_array)
 
 
 def main(argv):
