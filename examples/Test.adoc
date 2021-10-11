@@ -233,6 +233,11 @@ See also:
 
 Description of broadcast b1
 
+
+See also: 
+<<Test2-TestMethodNoArgs>>
+
+
 Output Parameters: 
 [options="header",cols="20%,20%,60%"]
 |===

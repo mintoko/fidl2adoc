@@ -230,27 +230,25 @@ def process_struct(package, if_name, struct, description_comment):
     adoc.append('=== Struct ' + struct_name + '\n')
     if description_comment:
         adoc.append(description_comment + '\n')
-        if struct_name in types_list:
-            adoc.append('\nUsed in: ')
-            for used in types_list[struct_name]:
-                adoc.append('<<' + if_name + '-' + used + '>>')
-        fields = struct.fields
-        if (fields):
-            # print (fidl_interface.methods[method].in_args)
-            adoc.append('\nStruct fields: ')
-            adoc.append('[options="header",cols="20%,20%,60%"]')
-            adoc.append('|===')
-            adoc.append('|Type | Name | Description ')
-            for field in fields:
-                comment = None
-                field_obj = fields[field]
-                if field_obj.comments and '@description' in field_obj.comments:
-                    comment = field_obj.comments['@description']
-                process_struct_field(package, if_name, struct, field_obj,
-                                     comment)
-            adoc.append('|===\n')
-        else:
-            print('ERROR: No struct fields found\n')
+    if struct_name in types_list:
+        adoc.append('\nUsed in: ')
+        for used in types_list[struct_name]:
+            adoc.append('<<' + if_name + '-' + used + '>>')
+    fields = struct.fields
+    if (fields):
+        # print (fidl_interface.methods[method].in_args)
+        adoc.append('\nStruct fields: ')
+        adoc.append('[options="header",cols="20%,20%,60%"]')
+        adoc.append('|===')
+        adoc.append('|Type | Name | Description ')
+        for field in fields:
+            comment = None
+            field_obj = fields[field]
+            if field_obj.comments and '@description' in field_obj.comments:
+                comment = field_obj.comments['@description']
+            process_struct_field(package, if_name, struct, field_obj,
+                                 comment)
+        adoc.append('|===\n')
 
 
 def process_structs(structs):
@@ -429,6 +427,7 @@ def main(argv):
             processor.import_file(fidl_file.strip())
         except (LexerException, ParserException, ProcessorException) as e:
             print("ERROR in " + fidl_file.strip() + ": {}".format(e))
+            return 2
 
     iterate_fidl(processor, process_typecollection, process_structs,
                  process_struct, process_enumerations, process_enumeration,

@@ -87,7 +87,7 @@ interface Test
 
     @see: TestMethod
     **>
-    attribute TestType1[] testAttribute
+    attriute TestType1[] testAttribute
 
     <**
     @description : Attribute testAttribute has some description.
