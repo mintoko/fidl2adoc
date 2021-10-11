@@ -52,6 +52,15 @@ Description of TestTypes2.TestCollectionEnum2
 |OFF|1|Enum is off
 |===
 
+== Arrays
+
+[[TestTypes2-TestArrayType2]]
+=== Array TestArrayType2
+
+Array element data type: <<TestTypes-TestCollectionEnum>>
+
+Description of TestArrayType
+
 [[Test]]
 = Interface testpackage.Test
 
@@ -203,6 +212,20 @@ Server -> Client: set testAttribute
 ----
 
 
+== Methods
+
+[[Test2-TestMethodNoArgs]]
+=== Method TestMethodNoArgs
+
+Description of TestMethodNoArgs.
+
+
+See also: 
+<<Test2-b1>>
+
+
+
+
 == Broadcasts
 
 [[Test2-b1]]
@@ -214,6 +237,11 @@ Output Parameters:
 [options="header",cols="20%,20%,60%"]
 |===
 |Type | Name | Description 
-| UInt8 | mb1 | Description of broadcast b1.mb1
-| UInt8 | mb2 | Description of broadcast b1.mb2
+| <<TestTypes-TestCollectionStruct>> | mb1 | Description of broadcast b1.mb1
+| Array of <<TestTypes2-TestArrayType2>> | mb2 | Description of broadcast b1.mb2
 |===
+
+[[Test2-bNoArgs]]
+=== Broadcast bNoArgs
+
+Description of broadcast b1NoArgs

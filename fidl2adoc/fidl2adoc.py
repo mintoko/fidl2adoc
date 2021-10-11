@@ -12,23 +12,11 @@ tc_int_types_map = {}
 
 
 def get_namespace(package, type):
-    ns = None
-    try:
-        type.namespace.__getitem__(type.name)
-        return type.namespace.name
-    except KeyError:
-        print('Item ' + str(type) + ' not found in interface.')
-    for tc in package.typecollections.values():
-        for struct in tc.structs.values():
-            if type.name == struct.name:
-                return tc.name
-        for enum in tc.enumerations.values():
-            if type.name == enum.name:
-                return tc.name
-        for array in tc.arrays.values():
-            if type == array.name:
-                return tc.name
-    return ns
+    if isinstance(type, ast.Reference):
+        type = type.reference
+    type.namespace.__getitem__(type.name)
+    print('found ' + type.name + ' in ' + type.namespace.name)
+    return type.namespace.name
 
 
 def fix_descr_intent(description):
@@ -70,10 +58,12 @@ def get_comment(obj, type):
 
 
 def get_type_name(package, type, if_name):
+    print('get type name ' + str(type))
     name = ''
     if isinstance(type, ast.PrimitiveType):
         name = type.name
     elif isinstance(type, ast.Array):
+        print(type.type)
         if isinstance(type.type, ast.PrimitiveType):
             name = 'Array of ' + type.type.name
         else:

@@ -57,6 +57,12 @@ typeCollection TestTypes2 {
         **>
         OFF
     }
+	
+    <**
+    @description : Description of TestArrayType
+    **> 
+    array TestArrayType2 of TestCollectionEnum
+	
 }
 	
 <**
@@ -186,6 +192,17 @@ interface Test2
     attribute String[] testAttribute
 
     <**
+    @description :
+        Description of TestMethodNoArgs.
+        
+        
+    @see: b1
+    **>
+    method TestMethodNoArgs {
+
+    }
+	
+    <**
     @description : Description of broadcast b1
     **> 	
     broadcast b1 {
@@ -193,12 +210,18 @@ interface Test2
             <**
             @description : Description of broadcast b1.mb1
             **> 
-            UInt8 mb1
+            TestCollectionStruct mb1
             <**
             @description : Description of broadcast b1.mb2
             **> 
-            UInt8 mb2
+            TestArrayType2[] mb2
         }
     }
 
+    <**
+    @description : Description of broadcast b1NoArgs
+    **> 	
+    broadcast bNoArgs {
+
+    }
 }
