@@ -1,3 +1,5 @@
+https://codecov.io/gh/mintoko/fidl2adoc[image:https://codecov.io/gh/mintoko/fidl2adoc/branch/main/graph/badge.svg?token=DN46EMNPVD[codecov]]
+
 = fidl2adoc
 
 == Introduction
