@@ -22,6 +22,7 @@ Struct fields:
 | <<TestTypes-TestCollectionEnum>> | structParam3 | Description of structParam3
 |===
 
+
 == Enumerations
 
 [[TestTypes-TestCollectionEnum]]
@@ -45,6 +46,7 @@ Used in:
 
 [[TestTypes2]]
 = Type Collection testpackage.TestTypes2
+
 == Enumerations
 
 [[TestTypes2-TestCollectionEnum2]]
@@ -158,6 +160,7 @@ Struct fields:
 | Array of UInt32 | structParam2 | Description of structParam2
 | <<Test-TestType1>> | structParam3 | Description of structParam3
 |===
+
 
 == Enumerations
 

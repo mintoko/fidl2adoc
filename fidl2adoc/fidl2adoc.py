@@ -64,10 +64,16 @@ def get_type_name(package, type, if_name):
             name = 'Array of ' + type.type.name
         else:
             if_name = get_namespace(package, type.type)
-            name = 'Array of <<' + if_name + '-' + type.type.name + '>>'
+            type_name = type.type.name
+            if isinstance(type.type, ast.Reference):
+                type_name = type.type.reference.name
+            name = 'Array of <<' + if_name + '-' + type_name + '>>'
     else:
+        type_name = type.name
+        if isinstance(type, ast.Reference):
+            type_name = type.reference.name
         if_name = get_namespace(package, type)
-        name = '<<' + if_name + '-' + type.name + '>>'
+        name = '<<' + if_name + '-' + type_name + '>>'
     return name
 
 
@@ -349,7 +355,7 @@ def process_enumeration(package, interface_name, enum,
 def process_enumerations(enumerations):
     global adoc
     if enumerations:
-        adoc.append('== Enumerations\n')
+        adoc.append('\n== Enumerations\n')
 
 
 def process_array(package, if_name, array, comment):
