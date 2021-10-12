@@ -10,6 +10,9 @@
 Description of TestCollectionStruct
 
 
+Used in: 
+<<Test2-b1>>
+
 Struct fields: 
 [options="header",cols="20%,20%,60%"]
 |===
@@ -28,6 +31,10 @@ Description of TestCollectionEnum
 
 Used in: 
 <<TestTypes-TestCollectionStruct>>
+, 
+<<TestTypes2-TestArrayType2>>
+, 
+<<Test-TestArrayType>>
 
 [options="header",cols="20%,20%,60%"]
 |===
@@ -60,6 +67,9 @@ Description of TestTypes2.TestCollectionEnum2
 Array element data type: <<TestTypes-TestCollectionEnum>>
 
 Description of TestArrayType
+
+Used in: 
+<<Test2-b1>>
 
 [[Test]]
 = Interface testpackage.Test
@@ -157,6 +167,8 @@ Struct fields:
 Description of TestType1
 
 Used in: 
+<<Test-testAttribute>>
+, 
 <<Test-TestType2>>
 
 [options="header",cols="20%,20%,60%"]
