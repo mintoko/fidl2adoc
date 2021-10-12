@@ -82,7 +82,7 @@ def add_type_reference(type, reference):
     if type in type_references:
         type_references[type] += [reference]
     else:
-        type_references[type] = [reference]   
+        type_references[type] = [reference]
 
 
 def adoc_type_references(package, type):
@@ -93,7 +93,8 @@ def adoc_type_references(package, type):
             # Append comma separator if not first item in list.
             if used != type_references[type][0]:
                 adoc.append(', ')
-            adoc.append('<<' + get_namespace(package, used) + '-' + used.name + '>>')
+            adoc.append('<<' + get_namespace(package, used) + '-' +
+                        used.name + '>>')
 
 
 def prep_method_args(package, args, method):
@@ -113,7 +114,7 @@ def prep_methods(methods):
 
 
 def prep_attribute(package, interface_name, attr, attr_name, attr_type,
-                      attr_type_name, comment_description, comment_see):
+                   attr_type_name, comment_description, comment_see):
     add_type_reference(attr.type, attr)
 
 
@@ -390,8 +391,8 @@ def process_typecollection(package, tc):
     adoc.append('= Type Collection ' + package.name + '.' + tc.name)
 
 
-def iterate_interface(package, fidl_interface, process_typecollection, process_interface,
-                      process_attributes, process_attribute,
+def iterate_interface(package, fidl_interface, process_typecollection,
+                      process_interface, process_attributes, process_attribute,
                       process_methods, process_method,
                       process_broadcasts, process_broadcast,
                       process_structs, process_struct, process_enumerations,
@@ -400,8 +401,8 @@ def iterate_interface(package, fidl_interface, process_typecollection, process_i
     process_attributes(fidl_interface.attributes)
     for attribute in fidl_interface.attributes:
         attr = fidl_interface.attributes[attribute]
-        process_attribute(package, fidl_interface.name, attr, attr.name, attr.type,
-                          attr.type.name,
+        process_attribute(package, fidl_interface.name, attr, attr.name,
+                          attr.type, attr.type.name,
                           get_comment(attr, '@description'),
                           get_comment(attr, '@see'))
     process_methods(fidl_interface.methods)
@@ -434,9 +435,9 @@ def iterate_interface(package, fidl_interface, process_typecollection, process_i
 
 
 def iterate_fidl(processor, process_typecollection, process_interface,
-                      process_attributes, process_attribute,
-                      process_methods, process_method,
-                      process_broadcasts, process_broadcast,
+                 process_attributes, process_attribute,
+                 process_methods, process_method,
+                 process_broadcasts, process_broadcast,
                  process_structs,
                  process_struct, process_enumerations, process_enumeration,
                  process_arrays, process_array):
@@ -462,7 +463,8 @@ def iterate_fidl(processor, process_typecollection, process_interface,
                 process_array(package, tc.name, array_data,
                               get_comment(array_data, '@description'))
         for fidl_interface in package.interfaces.values():
-            iterate_interface(package, fidl_interface, process_typecollection, process_interface,
+            iterate_interface(package, fidl_interface, process_typecollection,
+                              process_interface,
                               process_attributes, process_attribute,
                               process_methods, process_method,
                               process_broadcasts, process_broadcast,
@@ -499,15 +501,15 @@ def main(argv):
             return 2
 
     iterate_fidl(processor, prep_typecollection, prep_interface,
-	             prep_attributes, prep_attribute,
+                 prep_attributes, prep_attribute,
                  prep_methods, prep_method,
                  prep_broadcasts, prep_broadcast,
-	             prep_structs,
+                 prep_structs,
                  prep_struct, prep_enumerations, prep_enumeration,
                  prep_arrays, prep_array)
 
     iterate_fidl(processor, process_typecollection, process_interface,
-	             process_attributes, process_attribute,
+                 process_attributes, process_attribute,
                  process_methods, process_method,
                  process_broadcasts, process_broadcast,
                  process_structs,
