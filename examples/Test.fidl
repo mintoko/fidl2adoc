@@ -38,6 +38,12 @@ typeCollection TestTypes {
         **>
         TestCollectionEnum structParam3
     }
+
+    <**
+    @description : Description of TestMap
+    **>
+    map TestMap {UInt16 to UInt8}
+
 }
 
 <**
@@ -225,4 +231,10 @@ interface Test2
     broadcast bNoArgs {
 
     }
+	
+    <**
+    @description : Description of TestMap2
+	@see: bNoArgs and testAttribute
+    **>
+    map TestMap2 {UInt16 to TestCollectionEnum2}
 }

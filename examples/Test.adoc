@@ -7,8 +7,8 @@
 [[TestTypes-TestCollectionStruct]]
 === Struct TestCollectionStruct
 
-Description of TestCollectionStruct
 
+Description of TestCollectionStruct
 
 Used in: 
 <<Test2-b1>>
@@ -17,9 +17,15 @@ Struct fields:
 [options="header",cols="20%,20%,60%"]
 |===
 |Type | Name | Description 
-| String | structParam1 | Description of structParam1
-| UInt32 | structParam2 | Description of structParam2
-| <<TestTypes-TestCollectionEnum>> | structParam3 | Description of structParam3
+| String | structParam1 | 
+
+Description of structParam1
+| UInt32 | structParam2 | 
+
+Description of structParam2
+| <<TestTypes-TestCollectionEnum>> | structParam3 | 
+
+Description of structParam3
 |===
 
 
@@ -40,9 +46,25 @@ Used in:
 [options="header",cols="20%,20%,60%"]
 |===
 |Enumerator | Value | Description 
-|APP_1|0|Application 1
-|APP_2|1|Application 2
+|APP_1|0|
+
+Application 1
+|APP_2|1|
+
+Application 2
 |===
+
+== Maps
+
+[[TestTypes-TestMap]]
+=== Map TestMap
+
+Key type: UInt16
+
+Value type: UInt8
+
+
+Description of TestMap
 
 [[TestTypes2]]
 = Type Collection testpackage.TestTypes2
@@ -54,11 +76,18 @@ Used in:
 
 Description of TestTypes2.TestCollectionEnum2
 
+Used in: 
+<<Test2-TestMap2>>
+
 [options="header",cols="20%,20%,60%"]
 |===
 |Enumerator | Value | Description 
-|ON|0|Enum is On
-|OFF|1|Enum is off
+|ON|0|
+
+Enum is On
+|OFF|1|
+
+Enum is off
 |===
 
 == Arrays
@@ -67,6 +96,7 @@ Description of TestTypes2.TestCollectionEnum2
 === Array TestArrayType2
 
 Array element data type: <<TestTypes-TestCollectionEnum>>
+
 
 Description of TestArrayType
 
@@ -146,8 +176,8 @@ Output Parameters:
 [[Test-TestType2]]
 === Struct TestType2
 
-Description of TestType2
 
+Description of TestType2
 
 Used in: 
 <<Test-TestMethod>>
@@ -156,9 +186,15 @@ Struct fields:
 [options="header",cols="20%,20%,60%"]
 |===
 |Type | Name | Description 
-| String | structParam1 | Description of structParam1
-| Array of UInt32 | structParam2 | Description of structParam2
-| <<Test-TestType1>> | structParam3 | Description of structParam3
+| String | structParam1 | 
+
+Description of structParam1
+| Array of UInt32 | structParam2 | 
+
+Description of structParam2
+| <<Test-TestType1>> | structParam3 | 
+
+Description of structParam3
 |===
 
 
@@ -177,11 +213,21 @@ Used in:
 [options="header",cols="20%,20%,60%"]
 |===
 |Enumerator | Value | Description 
-|INIT|0|Description of INIT
-|STARTING|1|Description of STARTING
-|RUNNING|3|Description of RUNNING
-|SHUTDOWN|4|Description of SHUTDOWN
-|NONE|99|Description of NONE
+|INIT|0|
+
+Description of INIT
+|STARTING|1|
+
+Description of STARTING
+|RUNNING|3|
+
+Description of RUNNING
+|SHUTDOWN|4|
+
+Description of SHUTDOWN
+|NONE|99|
+
+Description of NONE
 |===
 
 == Arrays
@@ -190,6 +236,7 @@ Used in:
 === Array TestArrayType
 
 Array element data type: <<TestTypes-TestCollectionEnum>>
+
 
 Description of TestArrayType
 
@@ -240,7 +287,6 @@ See also:
 
 
 
-
 == Broadcasts
 
 [[Test2-b1]]
@@ -265,3 +311,19 @@ Output Parameters:
 === Broadcast bNoArgs
 
 Description of broadcast b1NoArgs
+
+
+== Maps
+
+[[Test2-TestMap2]]
+=== Map TestMap2
+
+Key type: UInt16
+
+Value type: <<TestTypes2-TestCollectionEnum2>>
+
+
+Description of TestMap2
+
+See also: 
+<<Test2-bNoArgs>> and <<Test2-testAttribute>> 
