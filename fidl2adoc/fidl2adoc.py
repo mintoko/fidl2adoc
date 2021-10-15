@@ -194,7 +194,7 @@ def process_attribute(package, attr):
     global adoc
     adoc_section_title(package, attr)
     adoc.append('\nAttribute data type: ' +
-                 get_type_name(package, attr.type))
+                get_type_name(package, attr.type))
     adoc_description(package, attr)
 
 
