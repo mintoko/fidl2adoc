@@ -3,9 +3,6 @@ from pyfranca import ProcessorException, ast
 import sys
 import getopt
 
-processor = Processor()
-inputfiles = []
-outputfile = ''
 adoc = []
 type_references = {}
 
@@ -123,7 +120,6 @@ def adoc_description(package, type):
     if comment_description:
         adoc.append('\n' + fix_descr_intent(comment_description))
     if comment_see:
-        # The @see comment must be a comma separated list
         sees = comment_see.split()
         adoc.append('\nSee also: ')
         comment_with_links = ''
@@ -133,292 +129,132 @@ def adoc_description(package, type):
         adoc.append(comment_with_links)
 
 
+def adoc_table(package, title, columns, entries, entries_func):
+    global adoc
+    if not entries:
+        return
+    adoc.append('\n' + title + '\n')
+    adoc.append('[options="header",cols="20%,20%,60%"]')
+    adoc.append('|===')
+    adoc.append('|' + '|'.join(columns))
+    entries_func(package, entries)
+    adoc.append('|===\n')
+
+
 def do_nothing(*args):
     pass
 
 
-def prep_method_args(package, args, method):
-    if not args:
-        return
-    for arg in args.values():
+def prep_method(package, method):
+    for arg in list(method.in_args.values()) + list(method.out_args.values()):
         add_type_reference(arg.type, method)
 
 
-def prep_method(package, if_name, method, comment_descr, comment_see):
-    prep_method_args(package, method.in_args, method)
-    prep_method_args(package, method.out_args, method)
-
-
-def prep_methods(methods):
-    pass
-
-
-def prep_attribute(package, interface_name, attr, attr_name, attr_type,
-                   attr_type_name, comment_description, comment_see):
+def prep_attribute(package, attr):
     add_type_reference(attr.type, attr)
 
 
-def prep_attributes(attributes):
-    pass
+def prep_broadcast(package, broadcast):
+    for arg in broadcast.out_args.values():
+        add_type_reference(arg.type, broadcast)
 
 
-def prep_broadcast(package, if_name, method, comment_descr, comment_see):
-    if not method.out_args:
-        return
-    for arg in method.out_args.values():
-        add_type_reference(arg.type, method)
+def prep_struct(package, struct):
+    for field in struct.fields.values():
+        add_type_reference(field.type, struct)
 
 
-def prep_broadcasts(broadcasts):
-    pass
-
-
-def prep_struct(package, if_name, struct, description_comment):
-    fields = struct.fields
-    if (fields):
-        for field in fields.values():
-            add_type_reference(field.type, struct)
-
-
-def prep_structs(structs):
-    pass
-
-
-def prep_enumeration(package, interface_name, enum, comment_description):
-    pass
-
-
-def prep_enumerations(enumerations):
-    pass
-
-
-def prep_array(package, if_name, array, comment):
+def prep_array(package, array):
     add_type_reference(array.type, array)
-
-
-def prep_arrays(arrays):
-    pass
 
 
 def prep_map(package, map):
     add_type_reference(map.key_type, map)
     add_type_reference(map.value_type, map)
 
-    
-def prep_maps(maps):
-    pass
 
-
-def prep_interface(package, interface):
-    pass
-
-
-def prep_typecollection(package, tc):
-    pass
-
-
-def process_method_args(package, args, title, if_name, method_name):
+def process_method_args(package, args):
     global adoc
-    if not args:
-        return
-    # print (args)
-    adoc.append(title)
-    adoc.append('[options="header",cols="20%,20%,60%"]')
-    adoc.append('|===')
-    adoc.append('|Type | Name | Description ')
-    for parameter in args:
-        arg = args[parameter]
-        comment = ""
-        if arg and arg.comments:
-            comment = arg.comments['@description']
+    for arg in args:
         adoc.append('| ' + get_type_name(package, arg.type) + ' | ' +
-                    arg.name + ' | ' + comment)
-    adoc.append('|===\n')
+                    arg.name + ' | ')
+        adoc_description(package, arg)
 
 
-def process_method(package, if_name, method, comment_descr, comment_see):
+def process_method(package, method):
+    adoc_section_title(package, method)
+    adoc_description(package, method)
+    adoc_table(package, 'Input Parameters:', ['Type', 'Name', 'Description'],
+               method.in_args.values(), process_method_args)
+    adoc_table(package, 'Output Parameters:', ['Type', 'Name', 'Description'],
+               method.out_args.values(), process_method_args)
+
+
+def process_attribute(package, attr):
     global adoc
-    adoc.append('[[' + if_name + '-' + method.name + ']]')
-    adoc.append('=== Method ' + method.name)
-    adoc.append('')
-    if comment_descr:
-        adoc.append(comment_descr + '\n')
-    if comment_see:
-        sees = comment_see.split(',')
-        adoc.append('\nSee also: ')
-        for see in sees:
-            adoc.append('<<' + if_name + '-' + see.strip() + '>>')
-        adoc.append('\n')
-    process_method_args(package, method.in_args, 'Input Parameters: ', if_name,
-                        method.name)
-    process_method_args(package, method.out_args, 'Output Parameters: ',
-                        if_name, method.name)
-
-
-def process_methods(methods):
-    global adoc
-    if methods:
-        adoc.append('\n')
-        adoc.append('== Methods')
-        adoc.append('')
-
-
-def process_attribute(package, interface_name, attr, attr_name, attr_type,
-                      attr_type_name, comment_description, comment_see):
-    global adoc
-    adoc.append('\n[[' + interface_name + '-' + attr_name + ']]')
-    adoc.append('=== Attribute ' + attr_name)
+    adoc_section_title(package, attr)
     adoc.append('\nAttribute data type: ' +
-                get_type_name(package, attr_type))
-    if comment_description:
-        adoc.append('\n' + fix_descr_intent(comment_description))
-    if comment_see:
-        # The @see comment must be a comma separated list
-        sees = comment_see.split(',')
-        adoc.append('\nSee also: ')
-        for see in sees:
-            adoc.append('<<' + interface_name + '-' + see.strip() + '>>')
+                 get_type_name(package, attr.type))
+    adoc_description(package, attr)
 
 
-def process_attributes(attributes):
+def process_broadcast_args(package, args):
     global adoc
-    if attributes:
-        adoc.append('\n== Attributes\n')
-
-
-def process_broadcast_args(package, args, title, if_name, method_name):
-    global adoc
-    if not args:
-        return
-    # print (args)
-    adoc.append(title)
-    adoc.append('[options="header",cols="20%,20%,60%"]')
-    adoc.append('|===')
-    adoc.append('|Type | Name | Description ')
-    for parameter in args:
-        arg = args[parameter]
-        comment = ""
-        if arg and arg.comments:
-            comment = arg.comments['@description']
+    for arg in args:
         adoc.append('| ' + get_type_name(package, arg.type) + ' | ' +
-                    arg.name + ' | ' + comment)
-    adoc.append('|===\n')
+                    arg.name + ' | ')
+        adoc_description(package, arg)
 
 
-def process_broadcast(package, if_name, method, comment_descr, comment_see):
+def process_broadcast(package, broadcast):
+    adoc_section_title(package, broadcast)
+    adoc_description(package, broadcast)
+    adoc_table(package, 'Output Parameters:', ['Type', 'Name', 'Description'],
+               broadcast.out_args.values(), process_broadcast_args)
+
+
+def process_struct_field(package, fields):
     global adoc
-    adoc.append('[[' + if_name + '-' + method.name + ']]')
-    adoc.append('=== Broadcast ' + method.name)
-    adoc.append('')
-    if comment_descr:
-        adoc.append(comment_descr + '\n')
-    if comment_see:
-        sees = comment_see.split(',')
-        adoc.append('\nSee also: ')
-        for see in sees:
-            adoc.append('<<' + if_name + '-' + see.strip() + '>>')
-        adoc.append('\n')
-    process_broadcast_args(package, method.out_args, 'Output Parameters: ',
-                           if_name, method.name)
+    for field in fields:
+        adoc.append('| ' + get_type_name(package, field.type) + ' | ' +
+                    field.name + ' | ')
+        adoc_description(package, field)
 
 
-def process_broadcasts(broadcasts):
-    global adoc
-    if broadcasts:
-        adoc.append('\n== Broadcasts\n')
-
-
-def process_struct_field(package, interface_name, struct, field,
-                         description_comment):
-    global adoc
-#    comment = ""
-#    if description_comment:
-#        comment = description_comment
-    adoc.append('| ' + get_type_name(package, field.type) + ' | ' +
-                field.name + ' | ')
-    adoc_description(package, field)
-
-
-def process_struct(package, if_name, struct, description_comment):
-    global adoc
-#    struct_name = struct.name
-#    adoc.append('[[' + if_name + '-' + struct_name + ']]')
-#    adoc.append('=== Struct ' + struct_name + '\n')
-#    if description_comment:
-#        adoc.append(description_comment + '\n')
+def process_struct(package, struct):
     adoc_section_title(package, struct)
     adoc_description(package, struct)
     adoc_type_references(package, struct)
-    if (struct.fields):
-        # print (fidl_interface.methods[method].in_args)
-        adoc.append('\nStruct fields: ')
-        adoc.append('[options="header",cols="20%,20%,60%"]')
-        adoc.append('|===')
-        adoc.append('|Type | Name | Description ')
-        for field in struct.fields.values():
-            comment = None
-#            if field.comments and '@description' in field.comments:
-#                comment = field_obj.comments['@description']
-            process_struct_field(package, if_name, struct, field,
-                                 comment)
-        adoc.append('|===\n')
+    adoc_table(package, 'Struct fields:', ['Type', 'Name', 'Description'],
+               struct.fields.values(), process_struct_field)
 
 
-def process_structs(structs):
+def process_enumerators(package, enumerators):
     global adoc
-    if structs:
-        adoc.append('\n== Structs\n')
-
-
-def process_enumeration(package, interface_name, enum,
-                        comment_description):
-    global adoc
-    adoc.append('[[' + interface_name + '-' + enum.name + ']]')
-    adoc.append('=== Enumeration ' + enum.name)
-    if comment_description:
-        adoc.append('\n' + fix_descr_intent(comment_description))
-    adoc_type_references(package, enum)
-    adoc.append('\n[options="header",cols="20%,20%,60%"]')
-    adoc.append('|===')
-    adoc.append('|Enumerator | Value | Description ')
     enum_value = 0
-    for en in enum.enumerators.values():
-#        comment = ""
-#        if en.comments:
-#            comment = en.comments['@description']
+    for en in enumerators:
         if en.value:
             enum_value = int(str(en.value.value))
         adoc.append('|' + en.name + '|' + str(enum_value) + '|')
         adoc_description(package, en)
         enum_value = enum_value + 1
-    adoc.append('|===')
 
 
-# Starts an ASCIIDoc section for Enumerations
-def process_enumerations(enumerations):
+def process_enumeration(package, enum):
+    adoc_section_title(package, enum)
+    adoc_description(package, enum)
+    adoc_type_references(package, enum)
+    adoc_table(package, '', ['Enumerator', 'Values', 'Description'],
+               enum.enumerators.values(), process_enumerators)
+
+
+def process_array(package, array):
     global adoc
-    if enumerations:
-        adoc.append('\n== Enumerations\n')
-
-
-def process_array(package, if_name, array, comment):
-    global adoc
-#    adoc.append('[[' + if_name + '-' + array.name + ']]')
-#    adoc.append('=== Array ' + array.name + '\n')
     adoc_section_title(package, array)
     adoc.append('Array element data type: ' +
                 get_type_name(package, array.type) + '\n')
-#    if comment:
-#        adoc.append(array.comments['@description'])
     adoc_description(package, array)
     adoc_type_references(package, array)
-
-
-# Starts an ASCIIDoc section for Arrays
-def process_arrays(arrays):
-    global adoc
-    if arrays:
-        adoc.append('\n== Arrays\n')
 
 
 def process_map(package, map):
@@ -428,12 +264,14 @@ def process_map(package, map):
     adoc.append('Value type: ' +
                 get_type_name(package, map.value_type) + '\n')
     adoc_description(package, map)
+    adoc_type_references(package, map)
 
-    
-def process_maps(maps):
+
+def adoc_major_section_title(values):
     global adoc
-    if maps:
-        adoc.append('\n== Maps\n')
+    if values:
+        adoc.append('\n== ' + list(values.values())[0].__class__.__name__ +
+                    's\n')
 
 
 def process_interface(package, interface):
@@ -457,100 +295,60 @@ def process_typecollection(package, tc):
     adoc.append('= Type Collection ' + package.name + '.' + tc.name)
 
 
-def iterate_interface(package, fidl_interface, process_typecollection,
-                      process_interface, process_attributes, process_attribute,
-                      process_methods, process_method,
-                      process_broadcasts, process_broadcast,
-                      process_structs, process_struct, process_enumerations,
-                      process_enumeration, process_arrays, process_array,
-                      process_maps, process_map):
-    process_interface(package, fidl_interface)
-    process_attributes(fidl_interface.attributes)
-    for attribute in fidl_interface.attributes:
-        attr = fidl_interface.attributes[attribute]
-        process_attribute(package, fidl_interface.name, attr, attr.name,
-                          attr.type, attr.type.name,
-                          get_comment(attr, '@description'),
-                          get_comment(attr, '@see'))
-    process_methods(fidl_interface.methods)
-    for method in fidl_interface.methods:
-        method_obj = fidl_interface.methods[method]
-        process_method(package, fidl_interface.name, method_obj,
-                       get_comment(method_obj, '@description'),
-                       get_comment(method_obj, '@see'))
-    process_broadcasts(fidl_interface.broadcasts)
-    for broadcast in fidl_interface.broadcasts:
-        broadcast_obj = fidl_interface.broadcasts[broadcast]
-        process_broadcast(package, fidl_interface.name, broadcast_obj,
-                          get_comment(broadcast_obj, '@description'),
-                          get_comment(broadcast_obj, '@see'))
-    process_structs(fidl_interface.structs)
-    for struct in fidl_interface.structs:
-        struct_data = fidl_interface.structs[struct]
-        process_struct(package, fidl_interface.name, struct_data,
-                       get_comment(struct_data, '@description'))
-    process_enumerations(fidl_interface.enumerations)
-    for enumeration in fidl_interface.enumerations:
-        enum = fidl_interface.enumerations[enumeration]
-        process_enumeration(package, fidl_interface.name, enum,
-                            get_comment(enum, '@description'))
-    process_arrays(fidl_interface.arrays)
-    for array in fidl_interface.arrays:
-        array_data = fidl_interface.arrays[array]
-        process_array(package, fidl_interface.name, array_data,
-                      get_comment(array_data, '@description'))
-    process_maps(fidl_interface.maps)
-    for map in fidl_interface.maps.values():
-        process_map(package, map)
+def process_item_lists(package, item_lists, funcs):
+    for item_list in item_lists:
+        funcs['major_section_title'](item_list)
+        for item in item_list.values():
+            funcs[item.__class__](package, item)
 
 
-def iterate_fidl(processor, process_typecollection, process_interface,
-                 process_attributes, process_attribute,
-                 process_methods, process_method,
-                 process_broadcasts, process_broadcast,
-                 process_structs,
-                 process_struct, process_enumerations, process_enumeration,
-                 process_arrays, process_array,
-                 process_maps, process_map):
-    # print (processor.packages.values())
+adoc_funcs = {
+    ast.Interface: process_interface,
+    ast.TypeCollection: process_typecollection,
+    ast.Attribute: process_attribute,
+    ast.Method: process_method,
+    ast.Broadcast: process_broadcast,
+    ast.Struct: process_struct,
+    ast.Enumeration: process_enumeration,
+    ast.Array: process_array,
+    ast.Map: process_map,
+    'major_section_title': adoc_major_section_title}
+
+
+type_reference_funcs = {
+    ast.Interface: do_nothing,
+    ast.TypeCollection: do_nothing,
+    ast.Attribute: prep_attribute,
+    ast.Method: prep_method,
+    ast.Broadcast: prep_broadcast,
+    ast.Struct: prep_struct,
+    ast.Enumeration: do_nothing,
+    ast.Array: prep_array,
+    ast.Map: prep_map,
+    'major_section_title': do_nothing
+}
+
+
+def iterate_fidl(processor, processing_funcs):
     for package in processor.packages.values():
-        # print (package.name)
-        for typecollection in package.typecollections:
-            tc = package.typecollections[typecollection]
-            process_typecollection(package, tc)
-            process_structs(tc.structs)
-            for struct in tc.structs:
-                struct_data = tc.structs[struct]
-                process_struct(package, tc.name, struct_data,
-                               get_comment(struct_data, '@description'))
-            process_enumerations(tc.enumerations)
-            for enumeration in tc.enumerations:
-                enum = tc.enumerations[enumeration]
-                process_enumeration(package, tc.name, enum,
-                                    get_comment(enum, '@description'))
-            process_arrays(tc.arrays)
-            for array in tc.arrays:
-                array_data = tc.arrays[array]
-                process_array(package, tc.name, array_data,
-                              get_comment(array_data, '@description'))
-            process_maps(tc.maps)
-            for map in tc.maps.values():
-                process_map(package, map)
-        for fidl_interface in package.interfaces.values():
-            iterate_interface(package, fidl_interface, process_typecollection,
-                              process_interface,
-                              process_attributes, process_attribute,
-                              process_methods, process_method,
-                              process_broadcasts, process_broadcast,
-                              process_structs, process_struct,
-                              process_enumerations, process_enumeration,
-                              process_arrays, process_array,
-                              process_maps, process_map)
+        for tc in package.typecollections.values():
+            processing_funcs[ast.TypeCollection](package, tc)
+            process_item_lists(package, [tc.structs,
+                               tc.enumerations, tc.arrays,
+                               tc.maps], processing_funcs)
+        for interface in package.interfaces.values():
+            processing_funcs[ast.Interface](package, interface)
+            process_item_lists(package, [interface.attributes,
+                               interface.methods, interface.broadcasts,
+                               interface.structs, interface.enumerations,
+                               interface.arrays, interface.maps],
+                               processing_funcs)
 
 
 def main(argv):
-    global inputfiles
-    global outputfile
+    processor = Processor()
+    inputfiles = []
+    outputfile = ''
     help = 'fidl2adoc.py -i <inputfile> [-i <inputfile2>]* -o <outputfile>'
     try:
         opts, args = getopt.getopt(argv, "hi:o:", ["ifile=", "ofile="])
@@ -575,21 +373,9 @@ def main(argv):
             print("ERROR in " + fidl_file.strip() + ": {}".format(e))
             return 2
 
-    iterate_fidl(processor, do_nothing, prep_interface,
-                 prep_attributes, prep_attribute,
-                 prep_methods, prep_method,
-                 prep_broadcasts, prep_broadcast,
-                 prep_structs,
-                 prep_struct, prep_enumerations, prep_enumeration,
-                 prep_arrays, prep_array, prep_maps, prep_map)
+    iterate_fidl(processor, type_reference_funcs)
 
-    iterate_fidl(processor, process_typecollection, process_interface,
-                 process_attributes, process_attribute,
-                 process_methods, process_method,
-                 process_broadcasts, process_broadcast,
-                 process_structs,
-                 process_struct, process_enumerations, process_enumeration,
-                 process_arrays, process_array, process_maps, process_map)
+    iterate_fidl(processor, adoc_funcs)
 
     with open(outputfile, 'w') as f:
         f.write('\n'.join(adoc))
