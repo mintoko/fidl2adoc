@@ -18,13 +18,13 @@ Struct fields:
 [options="header",cols="20%,20%,60%"]
 |===
 |Type|Name|Description
-| String | structParam1 | 
+|String|structParam1|
 
 Description of structParam1
-| UInt32 | structParam2 | 
+|UInt32|structParam2|
 
 Description of structParam2
-| <<TestTypes-TestCollectionEnum>> | structParam3 | 
+|<<TestTypes-TestCollectionEnum>>|structParam3|
 
 Description of structParam3
 |===
@@ -142,8 +142,7 @@ Client -> Server: testMethod(params)
 Server -> Client: set testAttribute
 ----
 
-See also: 
-<<Test-TestMethod>> 
+See also: <<Test-TestMethod>> 
 [[Test-testAttribute2]]
 === Attribute testAttribute2
 
@@ -160,8 +159,7 @@ Attribute testAttribute has some description.
 
 Description of TestMethod.
 
-See also: 
-<<Test-testAttribute>> 
+See also: <<Test-testAttribute>> 
 
 Input Parameters:
 
@@ -201,13 +199,13 @@ Struct fields:
 [options="header",cols="20%,20%,60%"]
 |===
 |Type|Name|Description
-| String | structParam1 | 
+|String|structParam1|
 
 Description of structParam1
-| Array of UInt32 | structParam2 | 
+|Array of UInt32|structParam2|
 
 Description of structParam2
-| <<Test-TestType1>> | structParam3 | 
+|<<Test-TestType1>>|structParam3|
 
 Description of structParam3
 |===
@@ -300,8 +298,7 @@ Server -> Client: set testAttribute
 
 Description of TestMethodNoArgs.
 
-See also: 
-<<Test2-b1>> 
+See also: <<Test2-b1>> 
 
 == Broadcasts
 
@@ -311,8 +308,7 @@ See also:
 
 Description of broadcast b1
 
-See also: 
-<<Test2-TestMethodNoArgs>> 
+See also: <<Test2-TestMethodNoArgs>> 
 
 Output Parameters:
 
@@ -345,5 +341,4 @@ Value type: <<TestTypes2-TestCollectionEnum2>>
 
 Description of TestMap2
 
-See also: 
-<<Test2-bNoArgs>> and <<Test2-testAttribute>> 
+See also: <<Test2-bNoArgs>> and <<Test2-testAttribute>> 
