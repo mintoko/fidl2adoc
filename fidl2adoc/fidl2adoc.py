@@ -107,7 +107,7 @@ def adoc_section_title(ast_type):
 
 def get_adoc_link_from_name(namespace, name):
     """ Returns an ASCIIDoc link to documentation of name.
-        TODO: Refactor with adoc_type_reference, get_namespace, get_type_name"""
+        TODO: Refactor w7 adoc_type_reference, get_namespace, get_type_name"""
     try:
         namespace.__getitem__(name)
         return '<<' + namespace.name + '-' + name + '>>'
@@ -148,7 +148,7 @@ def do_nothing(*_):
 
 def prep_method(method):
     """ Adds type references of a Franca IDL method. """
-    for arg in list(method.in_args.values()) + list(method.out_args.values())   :
+    for arg in list(method.in_args.values()) + list(method.out_args.values()):
         add_type_reference(arg.type, method)
 
 
@@ -280,7 +280,7 @@ def adoc_major_section_title(values):
 
 
 def process_interface(package, interface):
-    """ Adds ASCIIDoc for an Franca IDL interface. TODO: Use adoc_description"""
+    """ Adds ASCIIDoc for an Franca IDL interface. TODO:Use adoc_description"""
     adoc.append('\n[[' + interface.name + ']]')
     adoc.append('= Interface ' + package.name + '.' + interface.name)
     if interface.version:
@@ -295,10 +295,10 @@ def process_interface(package, interface):
         adoc.append('\nInterface description: ' + if_descr)
 
 
-def process_typecollection(package, typecollection):
+def process_typecollection(package, tyco):
     """ Adds ASCIIDoc for a Franca IDL typecollection. """
-    adoc.append('\n[[' + typecollection.name + ']]')
-    adoc.append('= Type Collection ' + package.name + '.' + typecollection.name)
+    adoc.append('\n[[' + tyco.name + ']]')
+    adoc.append('= Type Collection ' + package.name + '.' + tyco.name)
 
 
 def process_item_lists(item_lists, funcs):
