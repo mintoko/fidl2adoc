@@ -2,12 +2,12 @@
 
 import sys
 import getopt
-from typing import List
+from typing import Dict, List, Optional
 from pyfranca import Processor, LexerException, ParserException
 from pyfranca import ProcessorException, ast
 
 adoc = []
-type_references = {}
+type_references: Dict[ast.Type, List[ast.Type]] = {}
 
 
 def get_namespace(ast_type: ast.Type) -> str:
@@ -34,9 +34,8 @@ def fix_descr_intent(description: str) -> str:
             min_leading_spaces = min(min_leading_spaces, leading_spaces)
     min_leading_spaces = max(min_leading_spaces, 0)
     fixed_intent_lines = []
-    leading_spaces = ' ' * min_leading_spaces
     for line in description_lines:
-        if line.startswith(leading_spaces):
+        if line.startswith(' ' * min_leading_spaces):
             fixed_intent_lines.append(line[min_leading_spaces:])
         else:
             fixed_intent_lines.append(line)
@@ -44,7 +43,7 @@ def fix_descr_intent(description: str) -> str:
     return '\n'.join(fixed_intent_lines)
 
 
-def get_comment(obj: ast.Type, comment_type: str) -> str:
+def get_comment(obj: ast.Type, comment_type: str) -> Optional[str]:
     """ Returns comment_type from the comments dictionary. """
     comment = None
     if obj.comments and comment_type in obj.comments:
@@ -105,7 +104,7 @@ def adoc_section_title(ast_type):
                 ast_type.name + '\n')
 
 
-def get_adoc_link_from_name(namespace, name):
+def get_adoc_link_from_name(namespace: ast.Namespace, name: str) -> str:
     """ Returns an ASCIIDoc link to documentation of name.
         TODO: Refactor w7 adoc_type_reference, get_namespace, get_type_name"""
     try:

@@ -1,4 +1,4 @@
-name: Pep8
+name: Code style checks
 
 on: [push]
 
@@ -9,14 +9,32 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.9
+    - name: Set up Python 3.6
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: 3.6
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pycodestyle
+        pip install pycodestyle mypy prospector pylama bandit pylint
     - name: Analysing the code with pep8
       run: |
         pycodestyle --count ./fidl2adoc/fidl2adoc.py
+    - name: Analysing the code with mypy
+      run: |
+        mypy --ignore-missing-imports ./fidl2adoc/fidl2adoc.py
+    - name: Analysing the code with prospector
+      run: |
+        prospector ./fidl2adoc/fidl2adoc.py
+    - name: Analysing the code with pylama
+      run: |
+        pylama ./fidl2adoc/fidl2adoc.py
+    - name: Analysing the code with bandit
+      run: |
+        bandit ./fidl2adoc/fidl2adoc.py
+    - name: Analysing the code with pylint
+      run: |
+        pylint ./fidl2adoc/fidl2adoc.py
+    - name: Analysing the code with flake8
+      run: |
+        flake8 ./fidl2adoc/fidl2adoc.py 
