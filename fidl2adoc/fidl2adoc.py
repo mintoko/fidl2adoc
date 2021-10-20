@@ -234,8 +234,8 @@ def process_item_lists(item_lists, ast_type_func, start_section_func):
 def iterate_fidl(processor, ast_type_func, namespace_func, start_section_func):
     """ Iterates through a Franca IDL AST. """
     for package in processor.packages.values():
-        for namespace in (list(package.typecollections.values()) +
-                          list(package.interfaces.values())):
+        for namespace in (list(package.interfaces.values()) +
+                          list(package.typecollections.values())):
             namespace_func(package, namespace)
             if isinstance(namespace, ast.Interface):
                 process_item_lists([namespace.attributes,

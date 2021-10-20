@@ -1,142 +1,4 @@
 
-[[TestTypes]]
-= TypeCollection testpackage.TestTypes
-
-This section is generated from the Franca IDL file for TypeCollection TestTypes in package testpackage
-
-Package description: 
-Description of the testpackage.
-
-
-TypeCollection description: 
-Description of type collection TestTypes.
-
-
-== Structs
-
-[[TestTypes-TestCollectionStruct]]
-=== Struct TestCollectionStruct
-
-
-Description of TestCollectionStruct
-
-
-Struct fields:
-
-[options="header",cols="20%,20%,60%"]
-|===
-|Type|Name|Description
-|String|structParam1|
-Description of structParam1
-
-|UInt32|structParam2|
-Description of structParam2
-
-|<<TestTypes-TestCollectionEnum>>|structParam3|
-Description of structParam3
-
-|===
-
-
-Used in: 
-<<Test2-b1>>
-
-== Enumerations
-
-[[TestTypes-TestCollectionEnum]]
-=== Enumeration TestCollectionEnum
-
-
-Description of TestCollectionEnum
-
-
-
-
-[options="header",cols="20%,20%,60%"]
-|===
-|Enumerator|Values|Description
-|APP_1|0|
-Application 1
-
-|APP_2|1|
-Application 2
-
-|===
-
-
-Used in: 
-<<TestTypes-TestCollectionStruct>>
-, 
-<<TestTypes2-TestArrayType2>>
-, 
-<<Test-TestArrayType>>
-
-== Maps
-
-[[TestTypes-TestMap]]
-=== Map TestMap
-
-
-Description of TestMap
-
-Key type: UInt16
-
-Value type: UInt8
-
-
-[[TestTypes2]]
-= TypeCollection testpackage.TestTypes2
-
-This section is generated from the Franca IDL file for TypeCollection TestTypes2 in package testpackage
-
-Package description: 
-Description of the testpackage.
-
-
-TypeCollection description: 
-Description of the type collection TestTypes2.
-
-
-== Enumerations
-
-[[TestTypes2-TestCollectionEnum2]]
-=== Enumeration TestCollectionEnum2
-
-
-Description of TestTypes2.TestCollectionEnum2
-
-
-
-
-[options="header",cols="20%,20%,60%"]
-|===
-|Enumerator|Values|Description
-|ON|0|
-Enum is On
-
-|OFF|1|
-Enum is off
-
-|===
-
-
-Used in: 
-<<Test2-TestMap2>>
-
-== Arrays
-
-[[TestTypes2-TestArrayType2]]
-=== Array TestArrayType2
-
-
-Description of TestArrayType
-
-Array item type: <<TestTypes-TestCollectionEnum>>
-
-
-Used in: 
-<<Test2-b1>>
-
 [[Test]]
 = Interface testpackage.Test
 
@@ -381,3 +243,142 @@ See also: <<Test2-bNoArgs>> and <<Test2-testAttribute>>
 Key type: UInt16
 
 Value type: <<TestTypes2-TestCollectionEnum2>>
+
+
+[[TestTypes]]
+= TypeCollection testpackage.TestTypes
+
+This section is generated from the Franca IDL file for TypeCollection TestTypes in package testpackage
+
+Package description: 
+Description of the testpackage.
+
+
+TypeCollection description: 
+Description of type collection TestTypes.
+
+
+== Structs
+
+[[TestTypes-TestCollectionStruct]]
+=== Struct TestCollectionStruct
+
+
+Description of TestCollectionStruct
+
+
+Struct fields:
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Type|Name|Description
+|String|structParam1|
+Description of structParam1
+
+|UInt32|structParam2|
+Description of structParam2
+
+|<<TestTypes-TestCollectionEnum>>|structParam3|
+Description of structParam3
+
+|===
+
+
+Used in: 
+<<Test2-b1>>
+
+== Enumerations
+
+[[TestTypes-TestCollectionEnum]]
+=== Enumeration TestCollectionEnum
+
+
+Description of TestCollectionEnum
+
+
+
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Enumerator|Values|Description
+|APP_1|0|
+Application 1
+
+|APP_2|1|
+Application 2
+
+|===
+
+
+Used in: 
+<<Test-TestArrayType>>
+, 
+<<TestTypes-TestCollectionStruct>>
+, 
+<<TestTypes2-TestArrayType2>>
+
+== Maps
+
+[[TestTypes-TestMap]]
+=== Map TestMap
+
+
+Description of TestMap
+
+Key type: UInt16
+
+Value type: UInt8
+
+
+[[TestTypes2]]
+= TypeCollection testpackage.TestTypes2
+
+This section is generated from the Franca IDL file for TypeCollection TestTypes2 in package testpackage
+
+Package description: 
+Description of the testpackage.
+
+
+TypeCollection description: 
+Description of the type collection TestTypes2.
+
+
+== Enumerations
+
+[[TestTypes2-TestCollectionEnum2]]
+=== Enumeration TestCollectionEnum2
+
+
+Description of TestTypes2.TestCollectionEnum2
+
+
+
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Enumerator|Values|Description
+|ON|0|
+Enum is On
+
+|OFF|1|
+Enum is off
+
+|===
+
+
+Used in: 
+<<Test2-TestMap2>>
+
+== Arrays
+
+[[TestTypes2-TestArrayType2]]
+=== Array TestArrayType2
+
+
+Description of TestArrayType
+
+Array item type: <<TestTypes-TestCollectionEnum>>
+
+
+Used in: 
+<<Test2-b1>>
