@@ -246,9 +246,24 @@ def iterate_fidl(processor, ast_type_func, namespace_func, start_section_func):
                                ast_type_func, start_section_func)
 
 
+def process_inputfiles(inputfiles: List[str]) -> bool:
+    """ Process inputfiles and append ASCIIDoc output to adoc. """
+    processor = Processor()
+    for fidl_file in inputfiles:
+        try:
+            processor.import_file(fidl_file.strip())
+        except (LexerException, ParserException, ProcessorException) as exc:
+            print("ERROR in " + fidl_file.strip() + ": " + str(exc))
+            return False
+    iterate_fidl(processor, add_references_for_ast_type,
+                 do_nothing, do_nothing)
+    iterate_fidl(processor, adoc_for_ast_type,
+                 adoc_for_namespace, adoc_major_section_title)
+    return True
+
+
 def main(argv):
     """ Generates ASCIDoc file from a list of Franca IDL files. """
-    processor = Processor()
     inputfiles = []
     outputfile = ''
     help_txt = 'fidl2adoc.py -i <inputfile> [-i <inputfile2>]* -o <outputfile>'
@@ -270,19 +285,8 @@ def main(argv):
         return 1
     print(f'Parsing documentation from Franca IDL files: {inputfiles}')
     print(f'Generating ASCIIDoc to file: {outputfile}')
-
-    for fidl_file in inputfiles:
-        try:
-            processor.import_file(fidl_file.strip())
-        except (LexerException, ParserException, ProcessorException) as exc:
-            print("ERROR in " + fidl_file.strip() + ": " + str(exc))
-            return 2
-
-    iterate_fidl(processor, add_references_for_ast_type,
-                 do_nothing, do_nothing)
-    iterate_fidl(processor, adoc_for_ast_type,
-                 adoc_for_namespace, adoc_major_section_title)
-
+    if not process_inputfiles(inputfiles):
+        return 2
     with open(outputfile, 'w', encoding='utf-8') as file:
         file.write('\n'.join(adoc))
     return 0

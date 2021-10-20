@@ -1,5 +1,5 @@
-from fidl2adoc import main
 import hashlib
+from fidl2adoc import main
 
 
 def test_output():
@@ -26,5 +26,11 @@ def test_wrong_args(capsys):
 
 def test_help(capsys):
     assert 0 == main(['-h'])
+    captured = capsys.readouterr()
+    assert captured.out.startswith('fidl2adoc.py -i <input')
+
+
+def test_no_args(capsys):
+    assert 1 == main([])
     captured = capsys.readouterr()
     assert captured.out.startswith('fidl2adoc.py -i <input')
