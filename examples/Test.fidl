@@ -74,6 +74,7 @@ typeCollection TestTypes2 {
 <**
    @description : Description of the Test interface
    @author : Author
+   @see: The other interface.
 **>
 interface Test
 {

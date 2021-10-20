@@ -1,24 +1,24 @@
-""" Generates ASCIDoc file from a list of Franca IDL files. """
+""" Generates an ASCIIDoc file from a list of Franca IDL files. """
 
 import sys
 import getopt
-from typing import Dict, List, Optional
+from typing import Dict, List, Union
 from pyfranca import Processor, LexerException, ParserException
 from pyfranca import ProcessorException, ast
 
-adoc = []
+adoc = []  # List of text lines for ASCIIDoc output.
 type_references: Dict[ast.Type, List[ast.Type]] = {}
 
 
 def get_namespace(ast_type: ast.Type) -> str:
-    """ Returns the namespace name for parameter ast_type."""
+    """ Returns the namespace name for parameter ast_type. TODO: Remove? """
     if isinstance(ast_type, ast.Reference):
         ast_type = ast_type.reference
     return ast_type.namespace.name
 
 
 def fix_descr_intent(description: str) -> str:
-    """ Corrects the intentation of a Franca IDL comment."""
+    """ Corrects the indentation of a Franca IDL comment."""
     description_lines = description.split('\n')
     min_leading_spaces = -1
     for line in description_lines:
@@ -39,16 +39,7 @@ def fix_descr_intent(description: str) -> str:
             fixed_intent_lines.append(line[min_leading_spaces:])
         else:
             fixed_intent_lines.append(line)
-
     return '\n'.join(fixed_intent_lines)
-
-
-def get_comment(obj: ast.Type, comment_type: str) -> Optional[str]:
-    """ Returns comment_type from the comments dictionary. """
-    comment = None
-    if obj.comments and comment_type in obj.comments:
-        comment = obj.comments[comment_type]
-    return comment
 
 
 def get_type_name(ast_type: ast.Type) -> str:
@@ -99,45 +90,40 @@ def adoc_type_references(ast_type):
 
 def adoc_section_title(ast_type):
     """ Adds a ASCIIDoc section title. """
-    adoc.append('[[' + ast_type.namespace.name + '-' + ast_type.name + ']]')
-    adoc.append('=== ' + str(ast_type.__class__.__name__) + ' ' +
-                ast_type.name + '\n')
+    adoc.append(f'[[{ast_type.namespace.name}-{ast_type.name}]]')
+    adoc.append(f'=== {ast_type.__class__.__name__} {ast_type.name}\n')
 
 
-def get_adoc_link_from_name(namespace: ast.Namespace, name: str) -> str:
-    """ Returns an ASCIIDoc link to documentation of name.
-        TODO: Refactor w7 adoc_type_reference, get_namespace, get_type_name"""
-    try:
-        namespace.__getitem__(name)
-        return '<<' + namespace.name + '-' + name + '>>'
-    except KeyError:
-        return name
-
-
-def adoc_description(ast_type: ast.Type) -> None:
-    """ Adds the comments from ast_type to adoc. """
-    comment_description = get_comment(ast_type, '@description')
-    comment_see = get_comment(ast_type, '@see')
-    if comment_description:
-        adoc.append('\n' + fix_descr_intent(comment_description))
-    if comment_see:
-        sees = comment_see.split()
+def get_adoc_from_comments(ast_elem: Union[ast.Type, ast.Namespace,
+                           ast.Package]) -> str:
+    """ Returns an ASCIIDoc string for AST type or namespace comments"""
+    comment = ''
+    if ast_elem.comments and '@description' in ast_elem.comments:
+        comment = f'\n{fix_descr_intent(ast_elem.comments["@description"])}\n'
+    if ast_elem.comments and '@see' in ast_elem.comments:
+        sees = ast_elem.comments['@see'].split()
         comment_see = ''
         for see in sees:
-            comment_see += get_adoc_link_from_name(ast_type.namespace, see)
+            try:
+                see_elem = ast_elem.namespace.__getitem__(see)
+                comment_see += get_type_name(see_elem)
+            except (KeyError, AttributeError):
+                comment_see += see
             comment_see += ' '
-        adoc.append('\nSee also: ' + comment_see)
+        comment += '\nSee also: ' + comment_see
+    return comment
 
 
-def adoc_table(title: str, columns: List[str], entries, entries_func):
-    """ Adds a table to adoc TODO Change entries param . """
-    if not entries:
+def adoc_table(title: str, entries: List[List[str]]):
+    """ Adds an ASCIIDoc table to adoc with 'entries' as table rows.
+        There must be at least 2 rows.  """
+    if not entries or len(entries) <= 1:
         return
     adoc.append('\n' + title + '\n')
     adoc.append('[options="header",cols="20%,20%,60%"]')
     adoc.append('|===')
-    adoc.append('|' + '|'.join(columns))
-    entries_func(entries)
+    for entry in entries:
+        adoc.append('|' + '|'.join(entry))
     adoc.append('|===\n')
 
 
@@ -145,211 +131,119 @@ def do_nothing(*_):
     """ do_nothing does nothing """
 
 
-def prep_method(method):
-    """ Adds type references of a Franca IDL method. """
-    for arg in list(method.in_args.values()) + list(method.out_args.values()):
-        add_type_reference(arg.type, method)
+def add_references_for_ast_type(ast_type: ast.Type) -> None:
+    """ Extend type_references dictionary with the references of ast_type. """
+    if isinstance(ast_type, ast.Method):
+        for arg in (list(ast_type.in_args.values()) +
+                    list(ast_type.out_args.values())):
+            add_type_reference(arg.type, ast_type)
+    elif isinstance(ast_type, ast.Attribute):
+        add_type_reference(ast_type.type, ast_type)
+    elif isinstance(ast_type, ast.Broadcast):
+        for arg in ast_type.out_args.values():
+            add_type_reference(arg.type, ast_type)
+    elif isinstance(ast_type, ast.Struct):
+        for field in ast_type.fields.values():
+            add_type_reference(field.type, ast_type)
+    elif isinstance(ast_type, ast.Array):
+        add_type_reference(ast_type.type, ast_type)
+    elif isinstance(ast_type, ast.Map):
+        add_type_reference(ast_type.key_type, ast_type)
+        add_type_reference(ast_type.value_type, ast_type)
 
 
-def prep_attribute(attr):
-    """ Adds type references of a Franca IDL attribute. """
-    add_type_reference(attr.type, attr)
+def adoc_for_arg_list(args: List[Union[ast.StructField, ast.Argument]]
+                      ) -> List[List[str]]:
+    """ Adds ASCIIDoc for a Franca IDL method """
+    return list(map(lambda arg: [get_type_name(arg.type), str(arg.name),
+                                 get_adoc_from_comments(arg)], args))
 
 
-def prep_broadcast(broadcast):
-    """ Adds type references of a Franca IDL broadcast. """
-    for arg in broadcast.out_args.values():
-        add_type_reference(arg.type, broadcast)
-
-
-def prep_struct(struct):
-    """ Adds type references of a Franca IDL struct. """
-    for field in struct.fields.values():
-        add_type_reference(field.type, struct)
-
-
-def prep_array(array):
-    """ Adds type references of a Franca IDL array. """
-    add_type_reference(array.type, array)
-
-
-def prep_map(ast_map):
-    """ Adds type references of a Franca IDL map. """
-    add_type_reference(ast_map.key_type, ast_map)
-    add_type_reference(ast_map.value_type, ast_map)
-
-
-def process_method_args(args):
-    """ Adds ASCIIDoc for a Franca IDL method (TODO: Move down)"""
-    for arg in args:
-        adoc.append('| ' + get_type_name(arg.type) + ' | ' + arg.name + ' | ')
-        adoc_description(arg)
-
-
-def process_method(method):
-    """ Adds ASCIIDoc for a Franca IDL method. """
-    adoc_section_title(method)
-    adoc_description(method)
-    adoc_table('Input Parameters:', ['Type', 'Name', 'Description'],
-               method.in_args.values(), process_method_args)
-    adoc_table('Output Parameters:', ['Type', 'Name', 'Description'],
-               method.out_args.values(), process_method_args)
-
-
-def process_attribute(attr):
-    """ Adds ASCIIDoc for a Franca IDL attribute. """
-    adoc_section_title(attr)
-    adoc.append('\nAttribute data type: ' + get_type_name(attr.type))
-    adoc_description(attr)
-
-
-def process_broadcast_args(args):
-    """ Adds ASCIIDoc for a Franca IDL args (TODO: move down). """
-    for arg in args:
-        adoc.append('| ' + get_type_name(arg.type) + ' | ' + arg.name + ' | ')
-        adoc_description(arg)
-
-
-def process_broadcast(broadcast):
-    """ Adds ASCIIDoc for a Franca IDL broadcast. """
-    adoc_section_title(broadcast)
-    adoc_description(broadcast)
-    adoc_table('Output Parameters:', ['Type', 'Name', 'Description'],
-               broadcast.out_args.values(), process_broadcast_args)
-
-
-def process_struct_field(fields):
-    """ Adds ASCIIDoc for a Franca IDL field (TODO: Move down). """
-    for field in fields:
-        adoc.append('|' + get_type_name(field.type) + '|' + field.name + '|')
-        adoc_description(field)
-
-
-def process_struct(struct):
-    """ Adds ASCIIDoc for a Franca IDL struct. """
-    adoc_section_title(struct)
-    adoc_description(struct)
-    adoc_type_references(struct)
-    adoc_table('Struct fields:', ['Type', 'Name', 'Description'],
-               struct.fields.values(), process_struct_field)
-
-
-def process_enumerators(enumerators):
-    """ Adds ASCIIDoc for a Franca IDL enumerator list (TODO: Move down). """
+def process_enumerators(enumerators: List[ast.Enumerator]) -> List[List[str]]:
+    """ Adds ASCIIDoc for a Franca IDL enumerator list """
     enum_value = 0
+    table_elements = []
     for enumerator in enumerators:
         if enumerator.value:
             enum_value = int(str(enumerator.value.value))
-        adoc.append('|' + enumerator.name + '|' + str(enum_value) + '|')
-        adoc_description(enumerator)
+        table_elements.append([str(enumerator.name), str(enum_value),
+                              get_adoc_from_comments(enumerator)])
         enum_value = enum_value + 1
+    return table_elements
 
 
-def process_enumeration(enum):
-    """ Adds ASCIIDoc for a Franca IDL enumeration. """
-    adoc_section_title(enum)
-    adoc_description(enum)
-    adoc_type_references(enum)
-    adoc_table('', ['Enumerator', 'Values', 'Description'],
-               enum.enumerators.values(), process_enumerators)
+def adoc_for_ast_type(ast_type: ast.Type) -> None:
+    """ Extends global ASCIIDoc adoc with documentation for ast_type. """
+    adoc_section_title(ast_type)
+    adoc.append(get_adoc_from_comments(ast_type))
+    if isinstance(ast_type, ast.Method):
+        adoc_table('Input Parameters:', [['Type', 'Name', 'Description']] +
+                   adoc_for_arg_list(ast_type.in_args.values()))
+        adoc_table('Output Parameters:', [['Type', 'Name', 'Description']] +
+                   adoc_for_arg_list(ast_type.out_args.values()))
+    elif isinstance(ast_type, ast.Attribute):
+        adoc.append('\nAttribute data type: ' + get_type_name(ast_type.type))
+    elif isinstance(ast_type, ast.Broadcast):
+        adoc_table('Output Parameters:', [['Type', 'Name', 'Description']] +
+                   adoc_for_arg_list(ast_type.out_args.values()))
+    elif isinstance(ast_type, ast.Struct):
+        adoc_table('Struct fields:', [['Type', 'Name', 'Description']] +
+                   adoc_for_arg_list(ast_type.fields.values()))
+    elif isinstance(ast_type, ast.Enumeration):
+        adoc_table('', [['Enumerator', 'Values', 'Description']] +
+                   process_enumerators(ast_type.enumerators.values()))
+    elif isinstance(ast_type, ast.Array):
+        adoc.append(f'Array item type: {get_type_name(ast_type.type)}\n')
+    elif isinstance(ast_type, ast.Map):
+        adoc.append(f'Key type: {get_type_name(ast_type.key_type)}\n')
+        adoc.append(f'Value type: {get_type_name(ast_type.value_type)}\n')
+    adoc_type_references(ast_type)
 
 
-def process_array(array):
-    """ Adds ASCIIDoc for a Franca IDL array. """
-    adoc_section_title(array)
-    adoc.append('Array element data type: ' + get_type_name(array.type) + '\n')
-    adoc_description(array)
-    adoc_type_references(array)
-
-
-def process_map(ast_map):
-    """ Adds ASCIIDoc for a Franca IDL map. """
-    adoc_section_title(ast_map)
-    adoc.append('Key type: ' + get_type_name(ast_map.key_type) + '\n')
-    adoc.append('Value type: ' + get_type_name(ast_map.value_type) + '\n')
-    adoc_description(ast_map)
-    adoc_type_references(ast_map)
-
-
-def adoc_major_section_title(values):
+def adoc_major_section_title(values: Dict[str, ast.Type]) -> None:
     """ Adds ASCIIDoc section title for a Franca IDL types list. """
     if values:
-        adoc.append('\n== ' + list(values.values())[0].__class__.__name__ +
-                    's\n')
+        adoc.append(f'\n== {list(values.values())[0].__class__.__name__}s\n')
 
 
-def process_interface(package, interface):
-    """ Adds ASCIIDoc for an Franca IDL interface. TODO:Use adoc_description"""
-    adoc.append('\n[[' + interface.name + ']]')
-    adoc.append('= Interface ' + package.name + '.' + interface.name)
-    if interface.version:
-        adoc.append('\nVersion: ' + str(interface.version))
+def adoc_for_namespace(package: ast.Package, namespace: ast.Namespace) -> None:
+    """ Adds ASCIIDoc for an Franca IDL interface. """
+    namespace_type = namespace.__class__.__name__
+    adoc.append('\n[[' + namespace.name + ']]')
+    adoc.append(f'= {namespace_type} {package.name}.{namespace.name}')
+    if namespace.version:
+        adoc.append('\nVersion: ' + str(namespace.version))
     adoc.append('\nThis section is generated from the Franca IDL file for ' +
-                'interface ' + interface.name + ' in package ' + package.name)
-    package_descr = get_comment(package, '@description')
-    if_descr = get_comment(interface, '@description')
+                f'{namespace_type} {namespace.name} in package {package.name}')
+    package_descr = get_adoc_from_comments(package)
+    if_descr = get_adoc_from_comments(namespace)
     if package_descr:
         adoc.append('\nPackage description: ' + package_descr)
     if if_descr:
-        adoc.append('\nInterface description: ' + if_descr)
+        adoc.append('\n' + namespace_type + ' description: ' + if_descr)
 
 
-def process_typecollection(package, tyco):
-    """ Adds ASCIIDoc for a Franca IDL typecollection. """
-    adoc.append('\n[[' + tyco.name + ']]')
-    adoc.append('= Type Collection ' + package.name + '.' + tyco.name)
-
-
-def process_item_lists(item_lists, funcs):
+def process_item_lists(item_lists, ast_type_func, start_section_func):
     """ Processes a list of item lists with the function table funcs """
     for item_list in item_lists:
-        funcs['major_section_title'](item_list)
+        start_section_func(item_list)
         for item in item_list.values():
-            funcs[item.__class__](item)
+            ast_type_func(item)
 
 
-adoc_funcs = {
-    ast.Interface: process_interface,
-    ast.TypeCollection: process_typecollection,
-    ast.Attribute: process_attribute,
-    ast.Method: process_method,
-    ast.Broadcast: process_broadcast,
-    ast.Struct: process_struct,
-    ast.Enumeration: process_enumeration,
-    ast.Array: process_array,
-    ast.Map: process_map,
-    'major_section_title': adoc_major_section_title}
-
-
-type_reference_funcs = {
-    ast.Interface: do_nothing,
-    ast.TypeCollection: do_nothing,
-    ast.Attribute: prep_attribute,
-    ast.Method: prep_method,
-    ast.Broadcast: prep_broadcast,
-    ast.Struct: prep_struct,
-    ast.Enumeration: do_nothing,
-    ast.Array: prep_array,
-    ast.Map: prep_map,
-    'major_section_title': do_nothing
-}
-
-
-def iterate_fidl(processor, processing_funcs):
+def iterate_fidl(processor, ast_type_func, namespace_func, start_section_func):
     """ Iterates through a Franca IDL AST. """
     for package in processor.packages.values():
-        for tyco in package.typecollections.values():
-            processing_funcs[ast.TypeCollection](package, tyco)
-            process_item_lists([tyco.structs,
-                               tyco.enumerations, tyco.arrays,
-                               tyco.maps], processing_funcs)
-        for interface in package.interfaces.values():
-            processing_funcs[ast.Interface](package, interface)
-            process_item_lists([interface.attributes,
-                               interface.methods, interface.broadcasts,
-                               interface.structs, interface.enumerations,
-                               interface.arrays, interface.maps],
-                               processing_funcs)
+        for namespace in (list(package.typecollections.values()) +
+                          list(package.interfaces.values())):
+            namespace_func(package, namespace)
+            if isinstance(namespace, ast.Interface):
+                process_item_lists([namespace.attributes,
+                                   namespace.methods, namespace.broadcasts],
+                                   ast_type_func, start_section_func)
+            process_item_lists([namespace.structs, namespace.enumerations,
+                               namespace.arrays, namespace.maps],
+                               ast_type_func, start_section_func)
 
 
 def main(argv):
@@ -371,8 +265,11 @@ def main(argv):
             inputfiles.append(arg)
         elif opt in ("-o", "--ofile"):
             outputfile = arg
-    print('Input files are: ' + str(inputfiles))
-    print('Output file is: ' + str(outputfile))
+    if not inputfiles or not outputfile:
+        print(help_txt)
+        return 1
+    print(f'Parsing documentation from Franca IDL files: {inputfiles}')
+    print(f'Generating ASCIIDoc to file: {outputfile}')
 
     for fidl_file in inputfiles:
         try:
@@ -381,9 +278,10 @@ def main(argv):
             print("ERROR in " + fidl_file.strip() + ": " + str(exc))
             return 2
 
-    iterate_fidl(processor, type_reference_funcs)
-
-    iterate_fidl(processor, adoc_funcs)
+    iterate_fidl(processor, add_references_for_ast_type,
+                 do_nothing, do_nothing)
+    iterate_fidl(processor, adoc_for_ast_type,
+                 adoc_for_namespace, adoc_major_section_title)
 
     with open(outputfile, 'w', encoding='utf-8') as file:
         file.write('\n'.join(adoc))

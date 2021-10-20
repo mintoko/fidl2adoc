@@ -1,6 +1,16 @@
 
 [[TestTypes]]
-= Type Collection testpackage.TestTypes
+= TypeCollection testpackage.TestTypes
+
+This section is generated from the Franca IDL file for TypeCollection TestTypes in package testpackage
+
+Package description: 
+Description of the testpackage.
+
+
+TypeCollection description: 
+Description of type collection TestTypes.
+
 
 == Structs
 
@@ -10,8 +20,6 @@
 
 Description of TestCollectionStruct
 
-Used in: 
-<<Test2-b1>>
 
 Struct fields:
 
@@ -19,16 +27,19 @@ Struct fields:
 |===
 |Type|Name|Description
 |String|structParam1|
-
 Description of structParam1
+
 |UInt32|structParam2|
-
 Description of structParam2
-|<<TestTypes-TestCollectionEnum>>|structParam3|
 
+|<<TestTypes-TestCollectionEnum>>|structParam3|
 Description of structParam3
+
 |===
 
+
+Used in: 
+<<Test2-b1>>
 
 == Enumerations
 
@@ -38,12 +49,6 @@ Description of structParam3
 
 Description of TestCollectionEnum
 
-Used in: 
-<<TestTypes-TestCollectionStruct>>
-, 
-<<TestTypes2-TestArrayType2>>
-, 
-<<Test-TestArrayType>>
 
 
 
@@ -51,28 +56,46 @@ Used in:
 |===
 |Enumerator|Values|Description
 |APP_1|0|
-
 Application 1
-|APP_2|1|
 
+|APP_2|1|
 Application 2
+
 |===
 
+
+Used in: 
+<<TestTypes-TestCollectionStruct>>
+, 
+<<TestTypes2-TestArrayType2>>
+, 
+<<Test-TestArrayType>>
 
 == Maps
 
 [[TestTypes-TestMap]]
 === Map TestMap
 
+
+Description of TestMap
+
 Key type: UInt16
 
 Value type: UInt8
 
 
-Description of TestMap
-
 [[TestTypes2]]
-= Type Collection testpackage.TestTypes2
+= TypeCollection testpackage.TestTypes2
+
+This section is generated from the Franca IDL file for TypeCollection TestTypes2 in package testpackage
+
+Package description: 
+Description of the testpackage.
+
+
+TypeCollection description: 
+Description of the type collection TestTypes2.
+
 
 == Enumerations
 
@@ -82,8 +105,6 @@ Description of TestMap
 
 Description of TestTypes2.TestCollectionEnum2
 
-Used in: 
-<<Test2-TestMap2>>
 
 
 
@@ -91,23 +112,27 @@ Used in:
 |===
 |Enumerator|Values|Description
 |ON|0|
-
 Enum is On
-|OFF|1|
 
+|OFF|1|
 Enum is off
+
 |===
 
+
+Used in: 
+<<Test2-TestMap2>>
 
 == Arrays
 
 [[TestTypes2-TestArrayType2]]
 === Array TestArrayType2
 
-Array element data type: <<TestTypes-TestCollectionEnum>>
-
 
 Description of TestArrayType
+
+Array item type: <<TestTypes-TestCollectionEnum>>
+
 
 Used in: 
 <<Test2-b1>>
@@ -117,19 +142,22 @@ Used in:
 
 Version: 1.0
 
-This section is generated from the Franca IDL file for interface Test in package testpackage
+This section is generated from the Franca IDL file for Interface Test in package testpackage
 
-Package description: Description of the testpackage.
+Package description: 
+Description of the testpackage.
 
-Interface description: Description of the Test interface
+
+Interface description: 
+Description of the Test interface
+
+See also: The other interface. 
 
 == Attributes
 
 [[Test-testAttribute]]
 === Attribute testAttribute
 
-
-Attribute data type: Array of <<Test-TestType1>>
 
 Attribute testAttribute has some description.
     
@@ -143,13 +171,16 @@ Server -> Client: set testAttribute
 ----
 
 See also: <<Test-TestMethod>> 
+
+Attribute data type: Array of <<Test-TestType1>>
 [[Test-testAttribute2]]
 === Attribute testAttribute2
 
 
-Attribute data type: <<Test-TestArrayType>>
-
 Attribute testAttribute has some description.
+
+
+Attribute data type: <<Test-TestArrayType>>
 
 == Methods
 
@@ -166,9 +197,9 @@ Input Parameters:
 [options="header",cols="20%,20%,60%"]
 |===
 |Type|Name|Description
-| <<Test-TestType2>> | testParameter | 
-
+|<<Test-TestType2>>|testParameter|
 Description of the input parameter testParameter.
+
 |===
 
 
@@ -177,9 +208,9 @@ Output Parameters:
 [options="header",cols="20%,20%,60%"]
 |===
 |Type|Name|Description
-| String | testParameter2 | 
-
+|String|testParameter2|
 Description of the out parameter testParameter2.
+
 |===
 
 
@@ -191,8 +222,6 @@ Description of the out parameter testParameter2.
 
 Description of TestType2
 
-Used in: 
-<<Test-TestMethod>>
 
 Struct fields:
 
@@ -200,16 +229,19 @@ Struct fields:
 |===
 |Type|Name|Description
 |String|structParam1|
-
 Description of structParam1
+
 |Array of UInt32|structParam2|
-
 Description of structParam2
-|<<Test-TestType1>>|structParam3|
 
+|<<Test-TestType1>>|structParam3|
 Description of structParam3
+
 |===
 
+
+Used in: 
+<<Test-TestMethod>>
 
 == Enumerations
 
@@ -219,10 +251,6 @@ Description of structParam3
 
 Description of TestType1
 
-Used in: 
-<<Test-testAttribute>>
-, 
-<<Test-TestType2>>
 
 
 
@@ -230,32 +258,38 @@ Used in:
 |===
 |Enumerator|Values|Description
 |INIT|0|
-
 Description of INIT
+
 |STARTING|1|
-
 Description of STARTING
+
 |RUNNING|3|
-
 Description of RUNNING
+
 |SHUTDOWN|4|
-
 Description of SHUTDOWN
-|NONE|99|
 
+|NONE|99|
 Description of NONE
+
 |===
 
+
+Used in: 
+<<Test-testAttribute>>
+, 
+<<Test-TestType2>>
 
 == Arrays
 
 [[Test-TestArrayType]]
 === Array TestArrayType
 
-Array element data type: <<TestTypes-TestCollectionEnum>>
-
 
 Description of TestArrayType
+
+Array item type: <<TestTypes-TestCollectionEnum>>
+
 
 Used in: 
 <<Test-testAttribute2>>
@@ -265,19 +299,21 @@ Used in:
 
 Version: 2.0
 
-This section is generated from the Franca IDL file for interface Test2 in package testpackage
+This section is generated from the Franca IDL file for Interface Test2 in package testpackage
 
-Package description: Description of the testpackage.
+Package description: 
+Description of the testpackage.
 
-Interface description: Description of the Test interface
+
+Interface description: 
+Description of the Test interface
+
 
 == Attributes
 
 [[Test2-testAttribute]]
 === Attribute testAttribute
 
-
-Attribute data type: Array of String
 
 Attribute testAttribute of interface Test2 has some description.
     
@@ -289,6 +325,9 @@ method TestMethod.
 Client -> Server: testMethod(params)
 Server -> Client: set testAttribute
 ----
+
+
+Attribute data type: Array of String
 
 == Methods
 
@@ -315,12 +354,12 @@ Output Parameters:
 [options="header",cols="20%,20%,60%"]
 |===
 |Type|Name|Description
-| <<TestTypes-TestCollectionStruct>> | mb1 | 
-
+|<<TestTypes-TestCollectionStruct>>|mb1|
 Description of broadcast b1.mb1
-| Array of <<TestTypes2-TestArrayType2>> | mb2 | 
 
+|Array of <<TestTypes2-TestArrayType2>>|mb2|
 Description of broadcast b1.mb2
+
 |===
 
 [[Test2-bNoArgs]]
@@ -329,16 +368,16 @@ Description of broadcast b1.mb2
 
 Description of broadcast b1NoArgs
 
+
 == Maps
 
 [[Test2-TestMap2]]
 === Map TestMap2
 
-Key type: UInt16
-
-Value type: <<TestTypes2-TestCollectionEnum2>>
-
 
 Description of TestMap2
 
 See also: <<Test2-bNoArgs>> and <<Test2-testAttribute>> 
+Key type: UInt16
+
+Value type: <<TestTypes2-TestCollectionEnum2>>
