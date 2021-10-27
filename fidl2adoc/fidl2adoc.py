@@ -104,11 +104,16 @@ def get_adoc_from_comments(ast_elem: Union[ast.Type, ast.Namespace,
         sees = ast_elem.comments['@see'].split()
         comment_see = ''
         for see in sees:
+            last_char = see[-1]
+            if last_char in [',', '.']:
+                see = see[:-1]
             try:
                 see_elem = ast_elem.namespace.__getitem__(see)
                 comment_see += get_type_name(see_elem)
             except (KeyError, AttributeError):
                 comment_see += see
+            if last_char in [',', '.']:
+                comment_see += last_char
             comment_see += ' '
         comment += '\nSee also: ' + comment_see
     return comment
@@ -154,13 +159,13 @@ def add_references_for_ast_type(ast_type: ast.Type) -> None:
 
 def adoc_for_arg_list(args: List[Union[ast.StructField, ast.Argument]]
                       ) -> List[List[str]]:
-    """ Adds ASCIIDoc for a Franca IDL method """
+    """ Adds ASCIIDoc for a Franca IDL method (TODO: rename) """
     return list(map(lambda arg: [get_type_name(arg.type), str(arg.name),
                                  get_adoc_from_comments(arg)], args))
 
 
 def process_enumerators(enumerators: List[ast.Enumerator]) -> List[List[str]]:
-    """ Adds ASCIIDoc for a Franca IDL enumerator list """
+    """ Adds ASCIIDoc for a Franca IDL enumerator list (TODO: rename) """
     enum_value = 0
     table_elements = []
     for enumerator in enumerators:

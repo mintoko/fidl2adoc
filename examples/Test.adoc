@@ -239,7 +239,7 @@ Description of broadcast b1NoArgs
 
 Description of TestMap2
 
-See also: <<Test2-bNoArgs>> and <<Test2-testAttribute>> 
+See also: <<Test2-b1>>, <<Test2-bNoArgs>> and <<Test2-testAttribute>> 
 Key type: UInt16
 
 Value type: <<TestTypes2-TestCollectionEnum2>>

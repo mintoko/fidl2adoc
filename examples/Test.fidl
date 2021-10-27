@@ -235,7 +235,7 @@ interface Test2
 	
     <**
     @description : Description of TestMap2
-	@see: bNoArgs and testAttribute
+	@see: b1, bNoArgs and testAttribute
     **>
     map TestMap2 {UInt16 to TestCollectionEnum2}
 }
