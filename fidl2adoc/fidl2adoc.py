@@ -91,7 +91,10 @@ def adoc_type_references(ast_type):
 def adoc_section_title(ast_type):
     """ Adds a ASCIIDoc section title. """
     adoc.append(f'[[{ast_type.namespace.name}-{ast_type.name}]]')
-    adoc.append(f'=== {ast_type.__class__.__name__} {ast_type.name}\n')
+    if not hasattr(ast_type, 'extends') or ast_type.extends == None:
+        adoc.append(f'=== {ast_type.__class__.__name__} {ast_type.name}\n')
+    else:
+        adoc.append(f'=== {ast_type.__class__.__name__} {ast_type.name} extends <<{ast_type.namespace.name}-{ast_type.extends}>> \n')
 
 
 def get_adoc_from_comments(ast_elem: Union[ast.Type, ast.Namespace,
@@ -142,6 +145,8 @@ def add_references_for_ast_type(ast_type: ast.Type) -> None:
         for arg in (list(ast_type.in_args.values()) +
                     list(ast_type.out_args.values())):
             add_type_reference(arg.type, ast_type)
+        if ast_type.errors:
+            add_type_reference(ast_type.errors, ast_type)
     elif isinstance(ast_type, ast.Attribute):
         add_type_reference(ast_type.type, ast_type)
     elif isinstance(ast_type, ast.Broadcast):
@@ -186,17 +191,35 @@ def adoc_for_ast_type(ast_type: ast.Type) -> None:
                    adoc_for_arg_list(ast_type.in_args.values()))
         adoc_table('Output Parameters:', [['Type', 'Name', 'Description']] +
                    adoc_for_arg_list(ast_type.out_args.values()))
+        if ast_type.errors:
+            adoc.append('\nErrors: ' + get_type_name(ast_type.errors))
     elif isinstance(ast_type, ast.Attribute):
         adoc.append('\nAttribute data type: ' + get_type_name(ast_type.type))
     elif isinstance(ast_type, ast.Broadcast):
         adoc_table('Output Parameters:', [['Type', 'Name', 'Description']] +
                    adoc_for_arg_list(ast_type.out_args.values()))
     elif isinstance(ast_type, ast.Struct):
+        values = ()
+        ref_type = ast_type
+        while True:
+            values = tuple(ref_type.fields.values()) + values
+            if ref_type.extends != None:
+                ref_type = ref_type.reference
+            else:
+                break
         adoc_table('Struct fields:', [['Type', 'Name', 'Description']] +
-                   adoc_for_arg_list(ast_type.fields.values()))
+                   adoc_for_arg_list(values))
     elif isinstance(ast_type, ast.Enumeration):
+        values = ()
+        ref_type = ast_type
+        while True:
+            values = tuple(ref_type.enumerators.values()) + values
+            if ref_type.extends != None:
+                ref_type = ref_type.reference
+            else:
+                break
         adoc_table('', [['Enumerator', 'Values', 'Description']] +
-                   process_enumerators(ast_type.enumerators.values()))
+                   process_enumerators(values))
     elif isinstance(ast_type, ast.Array):
         adoc.append(f'Array item type: {get_type_name(ast_type.type)}\n')
     elif isinstance(ast_type, ast.Map):
