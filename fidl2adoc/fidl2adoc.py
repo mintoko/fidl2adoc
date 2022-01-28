@@ -91,10 +91,11 @@ def adoc_type_references(ast_type):
 def adoc_section_title(ast_type):
     """ Adds a ASCIIDoc section title. """
     adoc.append(f'[[{ast_type.namespace.name}-{ast_type.name}]]')
-    if not hasattr(ast_type, 'extends') or ast_type.extends == None:
+    if not hasattr(ast_type, 'extends') or ast_type.extends is None:
         adoc.append(f'=== {ast_type.__class__.__name__} {ast_type.name}\n')
     else:
-        adoc.append(f'=== {ast_type.__class__.__name__} {ast_type.name} extends <<{ast_type.namespace.name}-{ast_type.extends}>> \n')
+        adoc.append(f'=== {ast_type.__class__.__name__} {ast_type.name}'
+                    f' extends <<{ast_type.namespace.name}-{ast_type.extends}>> \n')
 
 
 def get_adoc_from_comments(ast_elem: Union[ast.Type, ast.Namespace,
@@ -203,7 +204,7 @@ def adoc_for_ast_type(ast_type: ast.Type) -> None:
         ref_type = ast_type
         while True:
             values = tuple(ref_type.fields.values()) + values
-            if ref_type.extends != None:
+            if ref_type.extends is not None:
                 ref_type = ref_type.reference
             else:
                 break
@@ -214,7 +215,7 @@ def adoc_for_ast_type(ast_type: ast.Type) -> None:
         ref_type = ast_type
         while True:
             values = tuple(ref_type.enumerators.values()) + values
-            if ref_type.extends != None:
+            if ref_type.extends is not None:
                 ref_type = ref_type.reference
             else:
                 break
