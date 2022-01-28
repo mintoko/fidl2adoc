@@ -95,7 +95,7 @@ def adoc_section_title(ast_type):
         adoc.append(f'=== {ast_type.__class__.__name__} {ast_type.name}\n')
     else:
         adoc.append(f'=== {ast_type.__class__.__name__} {ast_type.name}'
-                    f' extends <<{ast_type.namespace.name}-{ast_type.extends}>> \n')
+                    f' extends {get_type_name(ast_type.reference)} \n')
 
 
 def get_adoc_from_comments(ast_elem: Union[ast.Type, ast.Namespace,
