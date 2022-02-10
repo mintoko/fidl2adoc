@@ -6,7 +6,7 @@ from typing import Dict, List, Union
 from pyfranca import Processor, LexerException, ParserException
 from pyfranca import ProcessorException, ast
 
-adoc = []  # List of text lines for ASCIIDoc output.
+adoc: List[str] = []  # List of text lines for ASCIIDoc output.
 type_references: Dict[ast.Type, List[ast.Type]] = {}
 
 
@@ -119,7 +119,7 @@ def get_adoc_from_comments(ast_elem: Union[ast.Type, ast.Namespace,
             if last_char in [',', '.']:
                 comment_see += last_char
             comment_see += ' '
-        comment += '\nSee also: ' + comment_see
+        comment += '\nSee also: ' + comment_see + '\n'
     return comment
 
 

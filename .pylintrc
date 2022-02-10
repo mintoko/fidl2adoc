@@ -1,2 +1,8 @@
 [FORMAT]
 max-line-length=79
+
+[MASTER]
+load-plugins=pylint_json2html
+
+[REPORTS]
+output-format=jsonextended

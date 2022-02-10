@@ -84,7 +84,7 @@ interface Test
     @description : Attribute testAttribute has some description.
     
         New paragraph in the attribute description. testAttribute is updated by sending
-        method TestMethod.
+        method testMethod.
         
         [plantuml, test-seq-1]
         ----
@@ -92,7 +92,7 @@ interface Test
         Server -> Client: set testAttribute
         ----
 
-    @see: TestMethod
+    @see: testMethod
     **>
     attribute TestType1[] testAttribute
 
@@ -103,12 +103,12 @@ interface Test
         
     <**
     @description :
-        Description of TestMethod.
+        Description of testMethod.
         
         
     @see: testAttribute
     **>
-    method TestMethod {
+    method testMethod {
         in {
             <**
             @description : Description of the input parameter testParameter.
@@ -187,7 +187,7 @@ interface Test2
     @description : Attribute testAttribute of interface Test2 has some description.
     
         New paragraph in the attribute description. testAttribute is updated by sending
-        method TestMethod.
+        method testMethod.
         
         [plantuml, test-seq-2]
         ----
@@ -200,18 +200,18 @@ interface Test2
 
     <**
     @description :
-        Description of TestMethodNoArgs.
+        Description of testMethodNoArgs.
         
         
     @see: b1
     **>
-    method TestMethodNoArgs {
+    method testMethodNoArgs {
 
     }
 	
     <**
     @description : Description of broadcast b1
-    @see: TestMethodNoArgs
+    @see: testMethodNoArgs
     **> 	
     broadcast b1 {
         out{

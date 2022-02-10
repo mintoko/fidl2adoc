@@ -5,3 +5,6 @@ examples/Test2.adoc
 fidl2adoc/.vscode/settings.json
 fidl2adoc/.vscode/launch.json
 .vscode/settings.json
+fidl2adoc/report.json
+pylint.html
+pylint.json
