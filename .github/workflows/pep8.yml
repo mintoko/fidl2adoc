@@ -16,7 +16,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pycodestyle mypy prospector pylama bandit pylint json-extended
+        pip install pycodestyle mypy prospector pylama bandit pylint jsonextended
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Analysing the code with pep8
       run: |
