@@ -50,10 +50,25 @@ typeCollection TestTypes {
    @description : Description of the type collection TestTypes2.
 **>
 typeCollection TestTypes2 {
+
+    <**
+    @description : Description of TestTypes2.TestCollectionBaseEnum
+    **>
+    enumeration TestCollectionBaseEnum {
+        <**
+        @description : Enum Default 1
+        **>
+        DEFAULT_1
+        <**
+        @description : Enum Default 2
+        **>
+        DEFAULT_2
+    }
+
     <**
     @description : Description of TestTypes2.TestCollectionEnum2
     **>
-    enumeration TestCollectionEnum2 {
+    enumeration TestCollectionEnum2 extends TestCollectionBaseEnum{
         <**
         @description : Enum is On
         **>

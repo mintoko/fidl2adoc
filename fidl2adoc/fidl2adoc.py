@@ -94,8 +94,8 @@ def adoc_section_title(ast_type):
     if not hasattr(ast_type, 'extends') or ast_type.extends is None:
         adoc.append(f'=== {ast_type.__class__.__name__} {ast_type.name}\n')
     else:
-        adoc.append(f'=== {ast_type.__class__.__name__} {ast_type.name}'
-                    f' extends {get_type_name(ast_type.reference)} \n')
+        adoc.append(f'=== {ast_type.__class__.__name__} {ast_type.name}\n')
+        adoc.append(f'Extends {get_type_name(ast_type.reference)} \n')
 
 
 def get_adoc_from_comments(ast_elem: Union[ast.Type, ast.Namespace,
@@ -222,7 +222,7 @@ def adoc_for_ast_enum(ast_type: ast.Enumeration) -> None:
             ref_type = ref_type.reference
         else:
             break
-    adoc_table('', [['Enumerator', 'Values', 'Description']] +
+    adoc_table('', [['Enumerator', 'Value', 'Description']] +
                process_enumerators(values))
 
 

@@ -15,6 +15,7 @@ Description of the Test interface
 
 See also: The other interface. 
 
+
 == Attributes
 
 [[Test-testAttribute]]
@@ -24,7 +25,7 @@ See also: The other interface.
 Attribute testAttribute has some description.
     
 New paragraph in the attribute description. testAttribute is updated by sending
-method TestMethod.
+method testMethod.
 
 [plantuml, test-seq-1]
 ----
@@ -32,7 +33,8 @@ Client -> Server: testMethod(params)
 Server -> Client: set testAttribute
 ----
 
-See also: <<Test-TestMethod>> 
+See also: <<Test-testMethod>> 
+
 
 Attribute data type: Array of <<Test-TestType1>>
 [[Test-testAttribute2]]
@@ -46,13 +48,14 @@ Attribute data type: <<Test-TestArrayType>>
 
 == Methods
 
-[[Test-TestMethod]]
-=== Method TestMethod
+[[Test-testMethod]]
+=== Method testMethod
 
 
-Description of TestMethod.
+Description of testMethod.
 
 See also: <<Test-testAttribute>> 
+
 
 Input Parameters:
 
@@ -103,7 +106,7 @@ Description of structParam3
 
 
 Used in: 
-<<Test-TestMethod>>
+<<Test-testMethod>>
 
 == Enumerations
 
@@ -118,7 +121,7 @@ Description of TestType1
 
 [options="header",cols="20%,20%,60%"]
 |===
-|Enumerator|Values|Description
+|Enumerator|Value|Description
 |INIT|0|
 Description of INIT
 
@@ -180,7 +183,7 @@ Description of the Test interface
 Attribute testAttribute of interface Test2 has some description.
     
 New paragraph in the attribute description. testAttribute is updated by sending
-method TestMethod.
+method testMethod.
 
 [plantuml, test-seq-2]
 ----
@@ -193,13 +196,14 @@ Attribute data type: Array of String
 
 == Methods
 
-[[Test2-TestMethodNoArgs]]
-=== Method TestMethodNoArgs
+[[Test2-testMethodNoArgs]]
+=== Method testMethodNoArgs
 
 
-Description of TestMethodNoArgs.
+Description of testMethodNoArgs.
 
 See also: <<Test2-b1>> 
+
 
 == Broadcasts
 
@@ -209,7 +213,8 @@ See also: <<Test2-b1>>
 
 Description of broadcast b1
 
-See also: <<Test2-TestMethodNoArgs>> 
+See also: <<Test2-testMethodNoArgs>> 
+
 
 Output Parameters:
 
@@ -240,6 +245,7 @@ Description of broadcast b1NoArgs
 Description of TestMap2
 
 See also: <<Test2-b1>>, <<Test2-bNoArgs>> and <<Test2-testAttribute>> 
+
 Key type: UInt16
 
 Value type: <<TestTypes2-TestCollectionEnum2>>
@@ -300,7 +306,7 @@ Description of TestCollectionEnum
 
 [options="header",cols="20%,20%,60%"]
 |===
-|Enumerator|Values|Description
+|Enumerator|Value|Description
 |APP_1|0|
 Application 1
 
@@ -345,8 +351,30 @@ Description of the type collection TestTypes2.
 
 == Enumerations
 
+[[TestTypes2-TestCollectionBaseEnum]]
+=== Enumeration TestCollectionBaseEnum
+
+
+Description of TestTypes2.TestCollectionBaseEnum
+
+
+
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Enumerator|Value|Description
+|DEFAULT_1|0|
+Enum Default 1
+
+|DEFAULT_2|1|
+Enum Default 2
+
+|===
+
 [[TestTypes2-TestCollectionEnum2]]
 === Enumeration TestCollectionEnum2
+
+Extends <<TestTypes2-TestCollectionBaseEnum>> 
 
 
 Description of TestTypes2.TestCollectionEnum2
@@ -356,11 +384,17 @@ Description of TestTypes2.TestCollectionEnum2
 
 [options="header",cols="20%,20%,60%"]
 |===
-|Enumerator|Values|Description
-|ON|0|
+|Enumerator|Value|Description
+|DEFAULT_1|0|
+Enum Default 1
+
+|DEFAULT_2|1|
+Enum Default 2
+
+|ON|2|
 Enum is On
 
-|OFF|1|
+|OFF|3|
 Enum is off
 
 |===
