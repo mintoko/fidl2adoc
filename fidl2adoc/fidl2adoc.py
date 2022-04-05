@@ -280,6 +280,7 @@ def adoc_for_namespace(package: ast.Package, namespace: ast.Namespace) -> None:
     namespace_type = namespace.__class__.__name__
     adoc.append('\n[[' + namespace.name + ']]')
     adoc.append(f'= {namespace_type} {package.name}.{namespace.name}')
+    adoc.append(f':toc:')
     if namespace.version:
         adoc.append('\nVersion: ' + str(namespace.version))
     adoc.append('\nThis section is generated from the Franca IDL file for ' +
