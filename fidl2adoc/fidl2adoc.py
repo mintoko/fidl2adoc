@@ -72,7 +72,8 @@ def add_type_reference(ast_type, reference):
     if isinstance(ast_type, ast.Reference):
         ast_type = ast_type.reference
     if ast_type in type_references:
-        type_references[ast_type] += [reference]
+        if reference not in type_references[ast_type]:
+            type_references[ast_type] += [reference]
     else:
         type_references[ast_type] = [reference]
 
@@ -226,6 +227,21 @@ def adoc_for_ast_enum(ast_type: ast.Enumeration) -> None:
                process_enumerators(values))
 
 
+def adoc_for_ast_typedef(ast_type: ast.Typedef) -> None:
+    """ documentation handler for ast_type.Typedef """
+    adoc_table('', [['Typedef', 'Type', 'Description']] +
+               [[str(ast_type.name), get_type_name(ast_type.type),
+                                 get_adoc_from_comments(ast_type)]])
+
+
+def adoc_for_ast_const(ast_type: ast.Constant) -> None:
+    """ documentation handler for ast_type.Constant """
+    adoc_table('', [['Name', 'Value', 'Description']] +
+               [[str(ast_type.name), str(ast_type.value.value),
+                                 get_adoc_from_comments(ast_type)]])
+
+
+
 def adoc_for_ast_type(ast_type: ast.Type) -> None:
     """ Extends global ASCIIDoc adoc with documentation for ast_type. """
     adoc_section_title(ast_type)
@@ -241,11 +257,15 @@ def adoc_for_ast_type(ast_type: ast.Type) -> None:
         adoc_for_ast_struct(ast_type)
     elif isinstance(ast_type, ast.Enumeration):
         adoc_for_ast_enum(ast_type)
+    elif isinstance(ast_type, ast.Typedef):
+        adoc_for_ast_typedef(ast_type)
     elif isinstance(ast_type, ast.Array):
         adoc.append(f'Array item type: {get_type_name(ast_type.type)}\n')
     elif isinstance(ast_type, ast.Map):
         adoc.append(f'Key type: {get_type_name(ast_type.key_type)}\n')
         adoc.append(f'Value type: {get_type_name(ast_type.value_type)}\n')
+    elif isinstance(ast_type, ast.Constant):
+        adoc_for_ast_const(ast_type)
     adoc_type_references(ast_type)
 
 
@@ -291,7 +311,8 @@ def iterate_fidl(processor, ast_type_func, namespace_func, start_section_func):
                                    namespace.methods, namespace.broadcasts],
                                    ast_type_func, start_section_func)
             process_item_lists([namespace.structs, namespace.enumerations,
-                               namespace.arrays, namespace.maps],
+                               namespace.arrays, namespace.maps,
+                               namespace.typedefs, namespace.constants],
                                ast_type_func, start_section_func)
 
 
