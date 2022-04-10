@@ -1,7 +1,7 @@
 *.pyc
 
 .coverage
-examples/Test2.adoc
+examples/tmp*.adoc
 fidl2adoc/.vscode/settings.json
 fidl2adoc/.vscode/launch.json
 .vscode/settings.json
