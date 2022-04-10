@@ -78,14 +78,14 @@ typeCollection TestTypes2 {
         **>
         OFF
     }
-	
+
     <**
     @description : Description of TestArrayType
-    **> 
+    **>
     array TestArrayType2 of TestCollectionEnum
-	
+
 }
-	
+
 <**
    @description : Description of the Test interface
    @author : Author
@@ -97,10 +97,10 @@ interface Test
 
     <**
     @description : Attribute testAttribute has some description.
-    
+
         New paragraph in the attribute description. testAttribute is updated by sending
         method testMethod.
-        
+
         [plantuml, test-seq-1]
         ----
         Client -> Server: testMethod(params)
@@ -115,12 +115,12 @@ interface Test
     @description : Attribute testAttribute has some description.
     **>
     attribute TestArrayType testAttribute2
-        
+
     <**
     @description :
         Description of testMethod.
-        
-        
+
+
     @see: testAttribute
     **>
     method testMethod {
@@ -158,11 +158,11 @@ interface Test
 
     <**
     @description : Description of TestType1
-    **> 
+    **>
     enumeration TestType1 {
         <**
         @description : Description of INIT
-        **> 
+        **>
         INIT
         <**
         @description : Description of STARTING
@@ -181,10 +181,10 @@ interface Test
         **>
         NONE = 99
     }
-    
+
     <**
     @description : Description of TestArrayType
-    **> 
+    **>
     array TestArrayType of TestCollectionEnum
 
 }
@@ -200,10 +200,10 @@ interface Test2
 
     <**
     @description : Attribute testAttribute of interface Test2 has some description.
-    
+
         New paragraph in the attribute description. testAttribute is updated by sending
         method testMethod.
-        
+
         [plantuml, test-seq-2]
         ----
         Client -> Server: testMethod(params)
@@ -216,41 +216,51 @@ interface Test2
     <**
     @description :
         Description of testMethodNoArgs.
-        
-        
+
+
     @see: b1
     **>
     method testMethodNoArgs {
 
     }
-	
+
     <**
     @description : Description of broadcast b1
     @see: testMethodNoArgs
-    **> 	
+    **>
     broadcast b1 {
         out{
             <**
             @description : Description of broadcast b1.mb1
-            **> 
+            **>
             TestCollectionStruct mb1
             <**
             @description : Description of broadcast b1.mb2
-            **> 
+            **>
             TestArrayType2[] mb2
         }
     }
 
     <**
     @description : Description of broadcast b1NoArgs
-    **> 	
+    **>
     broadcast bNoArgs {
 
     }
-	
+
     <**
     @description : Description of TestMap2
 	@see: b1, bNoArgs and testAttribute
     **>
     map TestMap2 {UInt16 to TestCollectionEnum2}
+
+    <**
+    @description : Description of TestTypedef
+    **>
+    typedef TestTypeDef is UInt8
+
+    <**
+    @description : Description of TestConstant
+    **>
+    const Double pi = 3.1415d
 }

@@ -23,7 +23,7 @@ See also: The other interface.
 
 
 Attribute testAttribute has some description.
-    
+
 New paragraph in the attribute description. testAttribute is updated by sending
 method testMethod.
 
@@ -181,7 +181,7 @@ Description of the Test interface
 
 
 Attribute testAttribute of interface Test2 has some description.
-    
+
 New paragraph in the attribute description. testAttribute is updated by sending
 method testMethod.
 
@@ -249,6 +249,46 @@ See also: <<Test2-b1>>, <<Test2-bNoArgs>> and <<Test2-testAttribute>>
 Key type: UInt16
 
 Value type: <<TestTypes2-TestCollectionEnum2>>
+
+
+== Typedefs
+
+[[Test2-TestTypeDef]]
+=== Typedef TestTypeDef
+
+
+Description of TestTypedef
+
+
+
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Typedef|Type|Description
+|TestTypeDef|UInt8|
+Description of TestTypedef
+
+|===
+
+
+== Constants
+
+[[Test2-pi]]
+=== Constant pi
+
+
+Description of TestConstant
+
+
+
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Name|Value|Description
+|pi|3.1415|
+Description of TestConstant
+
+|===
 
 
 [[TestTypes]]
