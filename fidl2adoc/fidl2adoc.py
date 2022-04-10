@@ -349,11 +349,11 @@ def adoc_make_standalone():
         adoc.insert(1, ':toc:')
 
 
-def main(argv):
-    """ Generates ASCIDoc file from a list of Franca IDL files. """
+def parse_arguments(argv):
     inputfiles = []
     outputfile = ''
     is_standalone = False
+    arg_status = 0
     help_txt = ('fidl2adoc.py -i <inputfile> [-i <inputfile2>]* '
                 '-o <outputfile> [-s]')
     try:
@@ -362,11 +362,12 @@ def main(argv):
     except getopt.GetoptError:
         print('Input parameter error.')
         print(help_txt)
-        return 1
+        return [], '', False, 1
     for opt, arg in opts:
         if opt == '-h':
             print(help_txt)
-            return 0
+            arg_status = 0
+            return [], '', False, 0
         if opt in ("-i", "--ifile"):
             inputfiles.append(arg)
         elif opt in ("-o", "--ofile"):
@@ -376,7 +377,15 @@ def main(argv):
     if not inputfiles or not outputfile:
         print('Need at least 1 input and 1 output file.')
         print(help_txt)
-        return 1
+        arg_status = 1
+    return inputfiles, outputfile, is_standalone, arg_status
+
+
+def main(argv):
+    """ Generates ASCIDoc file from a list of Franca IDL files. """
+    inputfiles, outputfile, is_standalone, arg_status = parse_arguments(argv)
+    if arg_status != 0 or not inputfiles or not outputfile:
+        return arg_status
     print(f'Parsing documentation from Franca IDL files: {inputfiles}')
     print(f'Generating ASCIIDoc to file: {outputfile}')
     if not process_inputfiles(inputfiles):
