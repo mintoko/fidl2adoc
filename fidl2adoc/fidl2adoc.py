@@ -350,6 +350,7 @@ def adoc_make_standalone():
 
 
 def parse_arguments(argv):
+    """ Parse program arguments. """
     inputfiles = []
     outputfile = ''
     is_standalone = False
