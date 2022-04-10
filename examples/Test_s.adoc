@@ -1,0 +1,406 @@
+= Franca IDL Documentation
+:toc:
+
+[[Test]]
+== Interface testpackage.Test
+
+Version: 1.0
+
+This section is generated from the Franca IDL file for Interface Test in package testpackage
+
+Package description: 
+Description of the testpackage.
+
+
+Interface description: 
+Description of the Test interface
+
+See also: The other interface. 
+
+=== Attributes
+
+[[Test-testAttribute]]
+==== Attribute testAttribute
+
+
+Attribute testAttribute has some description.
+    
+New paragraph in the attribute description. testAttribute is updated by sending
+method testMethod.
+
+[plantuml, test-seq-1]
+----
+Client -> Server: testMethod(params)
+Server -> Client: set testAttribute
+----
+
+See also: <<Test-testMethod>> 
+
+
+Attribute data type: Array of <<Test-TestType1>>
+[[Test-testAttribute2]]
+==== Attribute testAttribute2
+
+
+Attribute testAttribute has some description.
+
+
+Attribute data type: <<Test-TestArrayType>>
+=== Methods
+
+[[Test-testMethod]]
+==== Method testMethod
+
+
+Description of testMethod.
+
+See also: <<Test-testAttribute>> 
+
+
+Input Parameters:
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Type|Name|Description
+|<<Test-TestType2>>|testParameter|
+Description of the input parameter testParameter.
+
+|===
+
+
+Output Parameters:
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Type|Name|Description
+|String|testParameter2|
+Description of the out parameter testParameter2.
+
+|===
+
+=== Structs
+
+[[Test-TestType2]]
+==== Struct TestType2
+
+
+Description of TestType2
+
+
+Struct fields:
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Type|Name|Description
+|String|structParam1|
+Description of structParam1
+
+|Array of UInt32|structParam2|
+Description of structParam2
+
+|<<Test-TestType1>>|structParam3|
+Description of structParam3
+
+|===
+
+
+Used in: 
+<<Test-testMethod>>
+=== Enumerations
+
+[[Test-TestType1]]
+==== Enumeration TestType1
+
+
+Description of TestType1
+
+
+
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Enumerator|Value|Description
+|INIT|0|
+Description of INIT
+
+|STARTING|1|
+Description of STARTING
+
+|RUNNING|3|
+Description of RUNNING
+
+|SHUTDOWN|4|
+Description of SHUTDOWN
+
+|NONE|99|
+Description of NONE
+
+|===
+
+
+Used in: 
+<<Test-testAttribute>>
+, 
+<<Test-TestType2>>
+=== Arrays
+
+[[Test-TestArrayType]]
+==== Array TestArrayType
+
+
+Description of TestArrayType
+
+Array item type: <<TestTypes-TestCollectionEnum>>
+
+
+Used in: 
+<<Test-testAttribute2>>
+
+[[Test2]]
+== Interface testpackage.Test2
+
+Version: 2.0
+
+This section is generated from the Franca IDL file for Interface Test2 in package testpackage
+
+Package description: 
+Description of the testpackage.
+
+
+Interface description: 
+Description of the Test interface
+
+=== Attributes
+
+[[Test2-testAttribute]]
+==== Attribute testAttribute
+
+
+Attribute testAttribute of interface Test2 has some description.
+    
+New paragraph in the attribute description. testAttribute is updated by sending
+method testMethod.
+
+[plantuml, test-seq-2]
+----
+Client -> Server: testMethod(params)
+Server -> Client: set testAttribute
+----
+
+
+Attribute data type: Array of String
+=== Methods
+
+[[Test2-testMethodNoArgs]]
+==== Method testMethodNoArgs
+
+
+Description of testMethodNoArgs.
+
+See also: <<Test2-b1>> 
+
+=== Broadcasts
+
+[[Test2-b1]]
+==== Broadcast b1
+
+
+Description of broadcast b1
+
+See also: <<Test2-testMethodNoArgs>> 
+
+
+Output Parameters:
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Type|Name|Description
+|<<TestTypes-TestCollectionStruct>>|mb1|
+Description of broadcast b1.mb1
+
+|Array of <<TestTypes2-TestArrayType2>>|mb2|
+Description of broadcast b1.mb2
+
+|===
+
+[[Test2-bNoArgs]]
+==== Broadcast bNoArgs
+
+
+Description of broadcast b1NoArgs
+
+=== Maps
+
+[[Test2-TestMap2]]
+==== Map TestMap2
+
+
+Description of TestMap2
+
+See also: <<Test2-b1>>, <<Test2-bNoArgs>> and <<Test2-testAttribute>> 
+
+Key type: UInt16
+
+Value type: <<TestTypes2-TestCollectionEnum2>>
+
+
+[[TestTypes]]
+== TypeCollection testpackage.TestTypes
+
+This section is generated from the Franca IDL file for TypeCollection TestTypes in package testpackage
+
+Package description: 
+Description of the testpackage.
+
+
+TypeCollection description: 
+Description of type collection TestTypes.
+
+=== Structs
+
+[[TestTypes-TestCollectionStruct]]
+==== Struct TestCollectionStruct
+
+
+Description of TestCollectionStruct
+
+
+Struct fields:
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Type|Name|Description
+|String|structParam1|
+Description of structParam1
+
+|UInt32|structParam2|
+Description of structParam2
+
+|<<TestTypes-TestCollectionEnum>>|structParam3|
+Description of structParam3
+
+|===
+
+
+Used in: 
+<<Test2-b1>>
+=== Enumerations
+
+[[TestTypes-TestCollectionEnum]]
+==== Enumeration TestCollectionEnum
+
+
+Description of TestCollectionEnum
+
+
+
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Enumerator|Value|Description
+|APP_1|0|
+Application 1
+
+|APP_2|1|
+Application 2
+
+|===
+
+
+Used in: 
+<<Test-TestArrayType>>
+, 
+<<TestTypes-TestCollectionStruct>>
+, 
+<<TestTypes2-TestArrayType2>>
+=== Maps
+
+[[TestTypes-TestMap]]
+==== Map TestMap
+
+
+Description of TestMap
+
+Key type: UInt16
+
+Value type: UInt8
+
+
+[[TestTypes2]]
+== TypeCollection testpackage.TestTypes2
+
+This section is generated from the Franca IDL file for TypeCollection TestTypes2 in package testpackage
+
+Package description: 
+Description of the testpackage.
+
+
+TypeCollection description: 
+Description of the type collection TestTypes2.
+
+=== Enumerations
+
+[[TestTypes2-TestCollectionBaseEnum]]
+==== Enumeration TestCollectionBaseEnum
+
+
+Description of TestTypes2.TestCollectionBaseEnum
+
+
+
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Enumerator|Value|Description
+|DEFAULT_1|0|
+Enum Default 1
+
+|DEFAULT_2|1|
+Enum Default 2
+
+|===
+
+[[TestTypes2-TestCollectionEnum2]]
+==== Enumeration TestCollectionEnum2
+
+Extends <<TestTypes2-TestCollectionBaseEnum>> 
+
+
+Description of TestTypes2.TestCollectionEnum2
+
+
+
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Enumerator|Value|Description
+|DEFAULT_1|0|
+Enum Default 1
+
+|DEFAULT_2|1|
+Enum Default 2
+
+|ON|2|
+Enum is On
+
+|OFF|3|
+Enum is off
+
+|===
+
+
+Used in: 
+<<Test2-TestMap2>>
+=== Arrays
+
+[[TestTypes2-TestArrayType2]]
+==== Array TestArrayType2
+
+
+Description of TestArrayType
+
+Array item type: <<TestTypes-TestCollectionEnum>>
+
+
+Used in: 
+<<Test2-b1>>

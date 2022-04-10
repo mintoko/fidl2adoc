@@ -1,0 +1,118 @@
+<**
+   @description : Description of the testpackage.
+**>
+package testpackage
+	
+<**
+   @description : Description of the Test3 interface
+   @author : Author
+   @see: The other interface.
+**>
+interface Test3
+{
+    version { major 2 minor 0 }
+
+    <**
+    @description : Attribute testAttribute has some description.
+    
+        New paragraph in the attribute description. testAttribute is updated by sending
+        method testMethod.
+        
+        [plantuml, test-seq-1]
+        ----
+        Client -> Server: testMethod(params)
+        Server -> Client: set testAttribute
+        ----
+
+    @see: testMethod
+    **>
+    attribute TestType1[] testAttribute
+
+    <**
+    @description :
+        Description of testMethod.
+        
+        
+    @see: testAttribute
+    **>
+    method testMethod {
+        in {
+            <**
+            @description : Description of the input parameter testParameter.
+            **>
+            TestType2 testParameter
+        }
+        out {
+            <**
+            @description : Description of the out parameter testParameter2.
+            **>
+            String testParameter2
+        }
+        error TestType1
+    }
+
+    <**
+    @description : Description of TestType2
+    **>
+    struct TestType2 {
+        <**
+        @description : Description of structParam1
+        **>
+        String structParam1
+        <**
+        @description : Description of structParam2
+        **>
+        UInt32[] structParam2
+        <**
+        @description : Description of structParam3
+        **>
+        TestType1 structParam3
+    }
+
+    <**
+    @description : Description of TestType3
+    **>
+    struct TestType3 extends TestType2 {
+        <**
+        @description : Description of structParam4
+        **>
+        MyTypedef structParam4
+    }
+
+    <**
+    @description : Description of TestType1
+    **> 
+    enumeration TestType1 {
+        <**
+        @description : Description of INIT
+        **> 
+        INIT
+        <**
+        @description : Description of STARTING
+        **>
+        STARTING
+        <**
+        @description : Description of RUNNING
+        **>
+        RUNNING = 3
+        <**
+        @description : Description of SHUTDOWN
+        **>
+        SHUTDOWN
+        <**
+        @description : Description of NONE
+        **>
+        NONE = 99
+    }
+
+    <**
+        @description : Description of MyTypedef
+    **> 
+    typedef MyTypedef is TestType1
+
+    <**
+        @description : Description of MAX_COUNT
+    **> 
+    const UInt32 MAX_COUNT = 10000
+
+}

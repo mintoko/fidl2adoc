@@ -1,5 +1,6 @@
 """ Generates an ASCIIDoc file from a list of Franca IDL files. """
 
+import re
 import sys
 import getopt
 from typing import Dict, List, Union
@@ -231,15 +232,14 @@ def adoc_for_ast_typedef(ast_type: ast.Typedef) -> None:
     """ documentation handler for ast_type.Typedef """
     adoc_table('', [['Typedef', 'Type', 'Description']] +
                [[str(ast_type.name), get_type_name(ast_type.type),
-                                 get_adoc_from_comments(ast_type)]])
+                 get_adoc_from_comments(ast_type)]])
 
 
 def adoc_for_ast_const(ast_type: ast.Constant) -> None:
     """ documentation handler for ast_type.Constant """
     adoc_table('', [['Name', 'Value', 'Description']] +
                [[str(ast_type.name), str(ast_type.value.value),
-                                 get_adoc_from_comments(ast_type)]])
-
+                 get_adoc_from_comments(ast_type)]])
 
 
 def adoc_for_ast_type(ast_type: ast.Type) -> None:
@@ -319,6 +319,7 @@ def iterate_fidl(processor, ast_type_func, namespace_func, start_section_func):
 def process_inputfiles(inputfiles: List[str]) -> bool:
     """ Process inputfiles and append ASCIIDoc output to adoc. """
     processor = Processor()
+    adoc.clear()
     for fidl_file in inputfiles:
         try:
             processor.import_file(fidl_file.strip())
@@ -332,14 +333,34 @@ def process_inputfiles(inputfiles: List[str]) -> bool:
     return True
 
 
+def adoc_make_standalone():
+    """ Converts adoc in a standalone document including table of contents """
+    num_main_sections = 0
+    for line in adoc:
+        if line.strip().startswith('= '):
+            num_main_sections += 1
+    if num_main_sections > 1:
+        tmp = adoc
+        tmp = [re.sub(r'^\n*(=+ )', r'=\1', line) for line in tmp]
+        adoc.clear()
+        adoc.extend(tmp)
+        adoc.insert(0, '= Franca IDL Documentation\n:toc:')
+    else:
+        adoc.insert(1, ':toc:')
+
+
 def main(argv):
     """ Generates ASCIDoc file from a list of Franca IDL files. """
     inputfiles = []
     outputfile = ''
-    help_txt = 'fidl2adoc.py -i <inputfile> [-i <inputfile2>]* -o <outputfile>'
+    is_standalone = False
+    help_txt = ('fidl2adoc.py -i <inputfile> [-i <inputfile2>]* '
+                '-o <outputfile> [-s]')
     try:
-        opts, _ = getopt.getopt(argv, "hi:o:", ["ifile=", "ofile="])
+        opts, _ = getopt.getopt(argv, "hi:o:s",
+                                ["ifile=", "ofile=", "standalone"])
     except getopt.GetoptError:
+        print('Input parameter error.')
         print(help_txt)
         return 1
     for opt, arg in opts:
@@ -350,13 +371,18 @@ def main(argv):
             inputfiles.append(arg)
         elif opt in ("-o", "--ofile"):
             outputfile = arg
+        elif opt in ("-s", "--standalone"):
+            is_standalone = True
     if not inputfiles or not outputfile:
+        print('Need at least 1 input and 1 output file.')
         print(help_txt)
         return 1
     print(f'Parsing documentation from Franca IDL files: {inputfiles}')
     print(f'Generating ASCIIDoc to file: {outputfile}')
     if not process_inputfiles(inputfiles):
         return 2
+    if is_standalone:
+        adoc_make_standalone()
     with open(outputfile, 'w', encoding='utf-8') as file:
         file.write('\n'.join(adoc))
     return 0
