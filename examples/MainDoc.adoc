@@ -1,6 +1,7 @@
 
 = SW Documentation
 :toc:
+:toclevels: 4
 
 == Interface Description
 
