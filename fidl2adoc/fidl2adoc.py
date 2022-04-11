@@ -203,7 +203,6 @@ def adoc_for_ast_method(ast_type: ast.Method) -> None:
             adoc.append('\nErrors:\n')
             adoc_table('', [['Enumerator', 'Value', 'Description']] +
                        process_enumerators(ast_type.errors.values()))
-            
 
 
 def adoc_for_ast_struct(ast_type: ast.Struct) -> None:
