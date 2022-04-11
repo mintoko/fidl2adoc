@@ -17,3 +17,12 @@ Generate Test.adoc from Test.fidl with:
 
   python ./fidl2adoc/fidl2adoc.py -i ./examples/Test.fidl -o ./examples/Test.adoc
 
+Include the generated adoc file in your documentation with
+
+  include::Test.adoc[leveloffset=x]
+  
+as shown in link:examples/MainDoc.adoc[MainDoc.adoc]. If the generated file should not be used within another document, but as a standalone document instead, use option "-s" or "--standalone":
+
+  python ./fidl2adoc/fidl2adoc.py -i ./examples/Test.fidl -o ./examples/Test_s.adoc -s
+  
+This will generate a document title and a table of contents in the adoc output file.
