@@ -147,7 +147,7 @@ def add_references_for_ast_method(ast_type: ast.Method) -> None:
     for arg in (list(ast_type.in_args.values()) +
                 list(ast_type.out_args.values())):
         add_type_reference(arg.type, ast_type)
-    if ast_type.errors:
+    if ast_type.errors and isinstance(ast_type.errors, ast.Reference):
         add_type_reference(ast_type.errors, ast_type)
 
 
@@ -197,7 +197,13 @@ def adoc_for_ast_method(ast_type: ast.Method) -> None:
     adoc_table('Output Parameters:', [['Type', 'Name', 'Description']] +
                adoc_for_arg_list(ast_type.out_args.values()))
     if ast_type.errors:
-        adoc.append('\nErrors: ' + get_type_name(ast_type.errors))
+        if isinstance(ast_type.errors, ast.Reference):
+            adoc.append('\nErrors: ' + get_type_name(ast_type.errors))
+        elif isinstance(ast_type.errors, ast.OrderedDict):
+            adoc.append('\nErrors:\n')
+            adoc_table('', [['Enumerator', 'Value', 'Description']] +
+                       process_enumerators(ast_type.errors.values()))
+            
 
 
 def adoc_for_ast_struct(ast_type: ast.Struct) -> None:

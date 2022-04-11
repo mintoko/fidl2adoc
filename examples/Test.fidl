@@ -136,6 +136,14 @@ interface Test
             **>
             String testParameter2
         }
+        error {
+            <**
+            @description : Description of the error parameter testParameterError.
+            **>
+            DIVISION BY ZERO
+            OVERFLOW
+            UNDERFLOW
+        }
     }
 
     <**

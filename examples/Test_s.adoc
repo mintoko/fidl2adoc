@@ -79,6 +79,24 @@ Description of the out parameter testParameter2.
 
 |===
 
+
+Errors:
+
+
+
+
+[options="header",cols="20%,20%,60%"]
+|===
+|Enumerator|Value|Description
+|DIVISION|0|
+Description of the error parameter testParameterError.
+
+|BY|1|
+|ZERO|2|
+|OVERFLOW|3|
+|UNDERFLOW|4|
+|===
+
 === Structs
 
 [[Test-TestType2]]
