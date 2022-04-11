@@ -344,7 +344,7 @@ def adoc_make_standalone():
         tmp = [re.sub(r'^\n*(=+ )', r'=\1', line) for line in tmp]
         adoc.clear()
         adoc.extend(tmp)
-        adoc.insert(0, '= Franca IDL Documentation\n:toc:')
+        adoc.insert(0, '= Franca IDL Documentation\n:toc:\n:toclevels: 3')
     else:
         adoc.insert(1, ':toc:')
 
